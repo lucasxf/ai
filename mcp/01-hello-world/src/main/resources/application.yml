@@ -2,6 +2,12 @@
 spring:
   application:
     name: mcp-hello-world
+  ai:
+    anthropic:
+      api-key: ${ANTHROPIC_API_KEY}
+      chat:
+        options:
+          model: sonnet-5
 
 # Server Configuration
 server:

@@ -81,24 +81,39 @@ main                     # Stable releases
 
 **POC 1: Hello World MCP**
 - Goal: Understand MCP protocol basics (client-server communication)
-- Status: Boilerplate created, architectural decisions needed
+- Status: Package structure complete, skeleton files created (28 Java files)
+- Package Structure (2025-11-04):
+  - `config/` - Spring Boot configuration
+  - `domain/protocol/` - MCP message models (records, sealed interfaces)
+  - `domain/tool/` - Tool definitions and registry
+  - `infrastructure/transport/` - Stdio transport layer
+  - `infrastructure/codec/` - JSON-RPC serialization
+  - `application/client/` - MCP client implementation
+  - `application/server/` - MCP server implementation
+  - `application/tools/` - Calculator tool implementations (add, multiply, random)
+  - `exception/` - Custom exception hierarchy
 - Deliverable: Working Java client + server + README + learnings
+- **Next Step:** Implement MCP protocol models (Priority 2)
 
 ### Next Steps (Architectural Decisions)
 
 Priority-ordered tasks for POC 1 completion:
 
-**Priority 1: Define Package Structure for MCP Components** (Next)
-- Decision needed: How to organize MCP protocol layers?
-- Options:
-  1. Monolithic: `/mcp/protocol`, `/mcp/client`, `/mcp/server` (simple, single POC)
-  2. Layered: `/domain/protocol`, `/application/client`, `/infrastructure/transport` (DDD-style)
-  3. Modular: Separate Maven modules for `mcp-protocol`, `mcp-client`, `mcp-server` (reusable)
-- **Recommendation:** Start with monolithic (option 1), refactor to modular later if needed
-- **Action:** Create package structure under `com.lucasxf.ai.mcp.helloworld`
+**Priority 1: Define Package Structure for MCP Components** ✅ COMPLETED (2025-11-04)
+- Decision: Layered DDD-style architecture (option 2) with Maven multi-module structure
+- Implemented under: `ai.mcp.helloworld` (simplified from `com.lucasxf.ai.mcp.helloworld`)
+- Structure:
+  1. `/domain` - Protocol and tool domain models (records, sealed interfaces)
+  2. `/infrastructure` - Transport layer (stdio, JSON-RPC codec)
+  3. `/application` - Client and server implementations
+  4. `/config` - Spring Boot configuration
+  5. `/exception` - Custom exception hierarchy
+- **Output:** 28 skeleton Java files ready for implementation
+- **Learnings:** DDD structure scales well for MCP; clear separation of concerns from day 1
 
-**Priority 2: Implement MCP Protocol Models (Request/Response Records)**
-- Task: Define MCP message types as Java records
+**Priority 2: Implement MCP Protocol Models (Request/Response Records)** ⬅️ NEXT
+- Task: Define MCP message types as Java records in domain/protocol/
+- Status: Skeleton files created, ready for implementation
 - Components:
   - `McpRequest` - Base request record (sealed interface)
   - `ToolInvocationRequest` - Client requests tool execution
@@ -106,8 +121,10 @@ Priority-ordered tasks for POC 1 completion:
   - `McpResponse` - Base response record (sealed interface)
   - `ToolListResponse` - Server returns tool definitions
   - `ToolInvocationResponse` - Server returns tool execution result
+  - JSON-RPC request/response wrappers for transport layer
 - Reference: [MCP Specification - Protocol Messages](https://modelcontextprotocol.io/docs)
 - Conventions: Use Java 21 records, sealed interfaces, pattern matching
+- Estimated Duration: 2-3 hours
 
 **Priority 3: Create Stdio Transport Layer**
 - Task: Implement stdio-based MCP transport
@@ -183,7 +200,7 @@ Priority-ordered tasks for POC 1 completion:
 | Articles Published        | 5      | 0       | 🔴     |
 | Test Coverage (Backend)   | >80%   | N/A     | ⚪     |
 | Integration Tests         | >20    | 0       | 🔴     |
-| Development Sessions      | N/A    | 1       | ⚪     |
+| Development Sessions      | N/A    | 2       | ⚪     |
 | GitHub Stars (target)     | 50     | N/A     | ⚪     |
 
 **Legend:** 🟢 On track | 🟡 At risk | 🔴 Behind | ⚪ Not started
@@ -228,4 +245,5 @@ This project will be considered successful when:
 
 ## 🔄 Update History
 
-- **2025-11-04:** Initial ROADMAP.md created. POC 1 (Hello World) in progress, boilerplate complete, architectural decisions next.
+- **2025-11-04 (Session 2):** Package structure completed with DDD-style layering (28 skeleton files). Priority 1 complete, Priority 2 (Protocol Models) marked as NEXT. Development Sessions updated to 2.
+- **2025-11-04 (Session 1):** Initial ROADMAP.md created. POC 1 (Hello World) in progress, boilerplate complete, architectural decisions next.
