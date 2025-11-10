@@ -7,6 +7,6 @@ import ai.mcp.helloworld.domain.tool.Tool;
  * @date 04/11/2025 20:46
  */
 public record ToolInvocationResponse(
-        String message,
-        Tool tool) implements McpResponse {
+        String id,
+        String jsonRpc) implements McpResponse {
 }

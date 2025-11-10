@@ -9,6 +9,8 @@ import java.util.List;
  * @date 04/11/2025 20:41
  */
 public record ToolListResponse(
+        String id,
+        String jsonRpc,
         String message,
         List<Tool> tools) implements McpResponse {
 }
