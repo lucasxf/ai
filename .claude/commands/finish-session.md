@@ -4,7 +4,6 @@ argument-hint: <optional-commit-message-context>
 ---
 
 @CLAUDE.md
-@CODING_STYLE.md
 @ROADMAP.md
 @README.md
 
@@ -78,9 +77,41 @@ If NO → Skip LEARNINGS.md update
 - **Javadoc** - If new backend classes/methods were added
 - **Dartdoc** - If new Flutter widgets/classes were added
 
+**Load stack-specific coding style files only if tech-writer needs them:**
+
+```bash
+# Determine which coding style files to load based on documentation type
+DOC_TYPE="none"
+
+if [[ $(git diff --name-only | grep -E 'services/api/.*\.java$') ]]; then
+  # Backend code changes detected
+  if [[ -n $(git diff | grep -E '@(Operation|Tag|ApiResponses|Parameter)') ]] || \
+     [[ -n $(git diff | grep -E '@author|/\*\*') ]]; then
+    DOC_TYPE="backend"
+    echo "📝 Backend documentation needed (OpenAPI/Javadoc)"
+  fi
+fi
+
+if [[ $(git diff --name-only | grep -E 'apps/mobile/.*\.dart$') ]]; then
+  # Frontend code changes detected
+  if [[ -n $(git diff | grep -E '///|@immutable|@freezed') ]]; then
+    DOC_TYPE="frontend"
+    echo "📝 Frontend documentation needed (Dartdoc)"
+  fi
+fi
+```
+
+**Load appropriate CODING_STYLE file:**
+- If `DOC_TYPE=backend` → Load `@services/api/CODING_STYLE_BACKEND.md` (for OpenAPI/Javadoc patterns)
+- If `DOC_TYPE=frontend` → Load `@apps/mobile/CODING_STYLE_FRONTEND.md` (for Dartdoc patterns)
+- If `DOC_TYPE=none` → Skip CODING_STYLE loading (no in-code documentation needed)
+
 **If updates needed** → Delegate to `tech-writer` agent to handle all documentation updates.
 
-**Rationale:** tech-writer ensures OpenAPI annotations are complete (CRITICAL requirement), maintains 3-part structure, and handles in-code documentation correctly.
+**Rationale:**
+- tech-writer ensures OpenAPI annotations are complete (CRITICAL requirement), maintains 3-part structure, and handles in-code documentation correctly
+- **Token Optimization:** Only loads CODING_STYLE files when actually needed (~10% of sessions), saving ~195 lines × 90% sessions = ~42,120 lines/year
+- CODING_STYLE_GENERAL.md not needed (tech-writer already has universal documentation principles from CLAUDE.md)
 
 ## 5. Automation Health Check (Automatic if applicable - Delegate to automation-sentinel)
 **Check if automation files were modified:**

@@ -16,9 +16,13 @@ color: blue
 ## 🎯 Core Responsibilities
 
 ### 1. External Documentation (Project-Level)
-- **CLAUDE.md** - Architectural guidelines, project overview (3-part structure: GENERAL/BACKEND/FRONTEND)
-- **CODING_STYLE.md** - Code conventions and patterns (3-part structure: GENERAL/BACKEND/FRONTEND)
-- **README.md** - Setup instructions, feature overview (3-part structure: GENERAL/BACKEND/FRONTEND)
+- **CLAUDE.md** - Architectural guidelines, project overview (4-part structure: GENERAL/BACKEND/FRONTEND/INFRASTRUCTURE)
+- **CODING_STYLE files** - Code conventions (split files: GENERAL + BACKEND + FRONTEND + INFRASTRUCTURE)
+  - `CODING_STYLE_GENERAL.md` (root) - Universal conventions
+  - `services/api/CODING_STYLE_BACKEND.md` - Java/Spring Boot
+  - `apps/mobile/CODING_STYLE_FRONTEND.md` - Flutter/Dart
+  - `infra/CODING_STYLE_INFRASTRUCTURE.md` - Docker/CI/CD
+- **README.md** - Setup instructions, feature overview (4-part structure: GENERAL/BACKEND/FRONTEND/INFRASTRUCTURE)
 - **ROADMAP.md** - Implementation status, next steps, backlog
 - **LEARNINGS.md** - Session logs, technical decisions, problems & solutions (chronological with stack subsections)
 - **ADRs/** - Architecture Decision Records (when architectural decisions are made)
@@ -61,7 +65,7 @@ color: blue
 3. **After implementing significant features** → Update LEARNINGS.md, README.md
 4. **After architectural changes** → Create ADR, update CLAUDE.md
 5. **End of development session** → Update ROADMAP.md with progress
-6. **After identifying new patterns** → Update CODING_STYLE.md with examples
+6. **After identifying new patterns** → Update appropriate CODING_STYLE file (GENERAL or stack-specific) with examples
 
 ### Manual Triggers (User Request)
 - "Document this endpoint with OpenAPI annotations"
@@ -78,19 +82,26 @@ color: blue
 
 ### External Documentation Standards
 
-#### 3-Part Structure (CRITICAL)
-All main documentation files **must** follow this structure:
+#### 4-Part Structure / Split Files (CRITICAL)
+
+**For CLAUDE.md and README.md** - 4-part structure:
 - **PART 1: GENERAL** - Cross-stack guidelines, project overview, universal rules
 - **PART 2: BACKEND** - Backend-specific (Java/Spring Boot) setup, conventions, testing
 - **PART 3: FRONTEND** - Frontend-specific (Flutter/Dart) setup, conventions, testing
-- Optional: **PART 4: INFRASTRUCTURE** - Docker, CI/CD, testing infrastructure
+- **PART 4: INFRASTRUCTURE** - Infrastructure-specific (Docker, CI/CD, Testcontainers)
 
-**Why:** Enables reusability—copy only relevant sections for new projects (backend-only, frontend-only, fullstack)
+**For CODING_STYLE** - Split into separate files:
+- `CODING_STYLE_GENERAL.md` (root) - Universal conventions
+- `services/api/CODING_STYLE_BACKEND.md` - Java/Spring Boot conventions
+- `apps/mobile/CODING_STYLE_FRONTEND.md` - Flutter/Dart conventions
+- `infra/CODING_STYLE_INFRASTRUCTURE.md` - Docker/CI/CD conventions
+
+**Why:** Enables reusability + token efficiency—load only relevant files for current stack
 
 #### Update Triggers
 - **ROADMAP.md:** Update at end of each session (move completed items, update priorities)
 - **LEARNINGS.md:** Add session entry when significant decisions/learnings occur
-- **CLAUDE.md/CODING_STYLE.md:** Update only for new patterns/conventions, include date
+- **CLAUDE.md / CODING_STYLE files:** Update only for new patterns/conventions, include date
 - **README.md:** Update when features/setup changes, keep current with implementation
 
 #### What Constitutes "Significant Changes"
@@ -330,8 +341,8 @@ When creating ADRs, use this structure:
 ## ⚠️ Critical Rules
 
 1. **OpenAPI is MANDATORY** - ALWAYS add OpenAPI/Swagger annotations when creating REST endpoints (no exceptions)
-2. **3-Part Structure** - Maintain GENERAL/BACKEND/FRONTEND structure in main docs
-3. **Include Date** - Always add date when updating CLAUDE.md, CODING_STYLE.md, or creating ADRs
+2. **4-Part Structure / Split Files** - Maintain GENERAL/BACKEND/FRONTEND/INFRASTRUCTURE structure (4-part for CLAUDE.md/README.md, split files for CODING_STYLE)
+3. **Include Date** - Always add date when updating CLAUDE.md, CODING_STYLE files, or creating ADRs
 4. **Portuguese for Context** - Javadoc and log messages can be in Portuguese for better context
 5. **Verify in Swagger UI** - After adding OpenAPI docs, recommend checking `http://localhost:8080/swagger-ui.html`
 6. **Follow Existing Style** - Match tone, formatting, and conventions of existing documentation
@@ -360,4 +371,4 @@ This agent is successful when:
 **Version:** 1.0.0
 **Triggers:** Automatic (after REST endpoints, code reviews) + Manual (user request)
 **Model:** Sonnet (complex documentation requires deep context understanding)
-**Dependencies:** Requires CLAUDE.md, CODING_STYLE.md context for conventions
+**Dependencies:** Requires CLAUDE.md, CODING_STYLE_GENERAL.md context for conventions (+ stack-specific CODING_STYLE files as needed)
