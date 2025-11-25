@@ -137,7 +137,7 @@ locs_per_session = 0
 
 [health]
 schema_errors = 0
-total_agents = 9
-total_commands = 14
+total_agents = 6
+total_commands = 16
 baseline_established = true
 next_update_mode = "delta"
