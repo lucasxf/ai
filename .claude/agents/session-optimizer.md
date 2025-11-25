@@ -32,31 +32,49 @@ Help user **maximize value per token** by:
 
 **Solution:** Load files based on task type.
 
-**File Loading Matrix:**
+**File Loading Matrix (UPDATED 2025-11-10):**
 
-| Task Type | Files to Load | Skip |
-|-----------|--------------|------|
-| **New Feature** | CLAUDE.md (relevant part), ROADMAP.md | README.md, LEARNINGS.md |
-| **Bug Fix** | Code files only | All docs unless needed |
-| **Learning** | CODING_STYLE.md, specific section | Full CLAUDE.md, LEARNINGS.md |
-| **Architecture Decision** | CLAUDE.md Part 1, ADRs | README.md, code files |
-| **Documentation Update** | Target file only (ROADMAP.md or LEARNINGS.md) | Other docs |
-| **Session Start** | ROADMAP.md only (current status) | CLAUDE.md, LEARNINGS.md |
+| Task Type | Files to Load | Skip | Use `/start-session` With |
+|-----------|--------------|------|---------------------------|
+| **Backend Feature** | CLAUDE.md, CODING_STYLE_GENERAL.md, CODING_STYLE_BACKEND.md, ROADMAP.md, README.md | Frontend, infra files | `--stack=backend` |
+| **Frontend Feature** | CLAUDE.md, CODING_STYLE_GENERAL.md, CODING_STYLE_FRONTEND.md, ROADMAP.md, README.md | Backend, infra files | `--stack=frontend` |
+| **Infrastructure Work** | CLAUDE.md, CODING_STYLE_GENERAL.md, CODING_STYLE_INFRASTRUCTURE.md, ROADMAP.md, README.md | Backend, frontend files | `--stack=infra` |
+| **Documentation Update** | CLAUDE.md, ROADMAP.md, README.md | All CODING_STYLE files | `--stack=docs` |
+| **Bug Fix** | Code files only + stack-specific CODING_STYLE | Other stack files | Use `--stack` parameter |
+| **Learning** | CODING_STYLE_GENERAL.md + stack-specific file | Other stacks | Use `--stack` parameter |
+| **Full-Stack Feature** | All files | None | `--stack=full` (use sparingly) |
 
 **Commands:**
 
-**❌ BAD (Loads 4 files, ~35k tokens):**
+**❌ BAD (Loads 7+ files, ~3,920 lines, 100% context):**
 ```
-/start-session
-# Loads: CLAUDE.md, CODING_STYLE.md, ROADMAP.md, README.md
+/start-session --stack=full
+# Legacy behavior: loads ALL coding style files regardless of task
 ```
 
-**✅ GOOD (Loads 1 file, ~3k tokens):**
+**✅ GOOD (Loads 6 files, ~2,320 lines, 41% reduction):**
 ```
-@ROADMAP.md
+/start-session --stack=backend
+# Loads only backend-specific coding styles + core docs
+```
 
-Quick session start. Working on [specific task].
+**✅ BEST (Smart inference, no explicit parameter needed):**
 ```
+/start-session implementing ReviewController endpoint
+# Claude infers "backend" from keywords → loads backend-specific files automatically
+```
+
+**✅ EXCELLENT (Minimal for docs-only, ~1,820 lines, 54% reduction):**
+```
+/start-session --stack=docs
+# Updating ROADMAP.md, no coding style needed
+```
+
+**Token Savings:**
+- Backend session: **41% reduction** (2,320 vs 3,920 lines)
+- Frontend session: **46% reduction** (2,120 vs 3,920 lines)
+- Infrastructure session: **47% reduction** (2,070 vs 3,920 lines)
+- Documentation session: **54% reduction** (1,820 vs 3,920 lines)
 
 ### Strategy 2: Selective File Reading
 
