@@ -1,0 +1,143 @@
+# Automation Usage Metrics
+# Collected by: pulse (Haiku 4.5)
+# Mode: Full baseline (first time setup)
+# Analysis period: Project inception to 2025-11-25
+
+[metadata]
+timestamp = "2025-11-25T19:19:01-03:00"
+commit_sha = "e90bda761a2984070840d5d143bc3f25703bcbea"
+branch = "feature/update-automation-from-wine-reviewer"
+schema_version = "1.0.0"
+updated_by = "pulse"
+baseline_mode = true
+total_commits_analyzed = 18
+commits_with_automations = 8
+
+[agent_usage.tech-writer]
+invocations = 2
+last_used = "2025-11-25T19:19:01-03:00"
+# Inferred from: docs commits, "added prompts", "documentation review" mentions
+
+[agent_usage.automation-sentinel]
+invocations = 1
+last_used = "2025-11-25T19:19:01-03:00"
+# Inferred from: "automation infrastructure finalization"
+
+[agent_usage.backend-code-reviewer]
+invocations = 1
+last_used = "2025-11-25T19:19:01-03:00"
+# Inferred from: setup, MCP protocol work, refactors
+
+[agent_usage.session-optimizer]
+invocations = 1
+last_used = "2025-11-25T19:19:01-03:00"
+# Inferred from: "claude init setup", multiple sessions
+
+[agent_usage.pulse]
+invocations = 0
+last_used = null
+
+[agent_usage.flutter-implementation-coach]
+invocations = 0
+last_used = null
+
+[agent_usage.frontend-ux-specialist]
+invocations = 0
+last_used = null
+
+[agent_usage.learning-tutor]
+invocations = 0
+last_used = null
+
+[agent_usage.cross-project-architect]
+invocations = 0
+last_used = null
+
+[command_usage.start-session]
+invocations = 3
+last_used = "2025-11-25T19:19:01-03:00"
+# Inferred from: multiple feature branches, init, claude setup
+
+[command_usage.finish-session]
+invocations = 1
+last_used = "2025-11-25T19:19:01-03:00"
+# Inferred from: "complete documentation review"
+
+[command_usage.create-pr]
+invocations = 3
+last_used = "2025-11-25T19:19:01-03:00"
+# Direct count: 3 merged PRs in git log (#1, #2, #3)
+
+[command_usage.update-roadmap]
+invocations = 0
+last_used = null
+
+[command_usage.review-code]
+invocations = 1
+last_used = "2025-11-25T19:19:01-03:00"
+# Inferred from: "code review workflow" commit
+
+[command_usage.quick-test]
+invocations = 0
+last_used = null
+
+[command_usage.test-quick]
+invocations = 0
+last_used = null
+
+[command_usage.test-service]
+invocations = 0
+last_used = null
+
+[command_usage.build-quiet]
+invocations = 0
+last_used = null
+
+[command_usage.verify-quiet]
+invocations = 0
+last_used = null
+
+[command_usage.docker-start]
+invocations = 0
+last_used = null
+
+[command_usage.docker-stop]
+invocations = 0
+last_used = null
+
+[command_usage.directive]
+invocations = 0
+last_used = null
+
+[command_usage.api-doc]
+invocations = 0
+last_used = null
+
+[productivity]
+# Current codebase snapshot
+# Note: Java code is in MCP POCs, not typical service structure
+current_total_locs = 0
+current_production_locs = 0
+current_test_locs = 0
+test_ratio_percent = 0.0
+
+# Period metrics (full project history)
+total_locs_added = 22511
+total_locs_deleted = 2417
+net_locs = 20094
+
+# Averages (based on 11 commits with changes in full history)
+avg_locs_changed_per_commit = 2257
+avg_locs_added_per_commit = 2046
+avg_locs_deleted_per_commit = 220
+
+# Velocity metrics (informational, calculated by automation-sentinel)
+locs_per_day = 0
+locs_per_session = 0
+
+[health]
+schema_errors = 0
+total_agents = 9
+total_commands = 14
+baseline_established = true
+next_update_mode = "delta"
