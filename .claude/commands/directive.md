@@ -1,5 +1,5 @@
 ---
-description: Add a new coding directive to CLAUDE.md or CODING_STYLE.md with smart deduplication
+description: Add a new coding directive with smart deduplication to appropriate coding style file
 argument-hint: <directive-content>
 ---
 
@@ -11,7 +11,10 @@ Add the following coding directive with smart deduplication:
 
 1. **Search for Similar Directives**
    - Search in CLAUDE.md (all parts: General/Backend/Frontend/Infrastructure)
-   - Search in CODING_STYLE.md (all parts: General/Backend/Frontend/Infrastructure)
+   - Search in CODING_STYLE_GENERAL.md (universal cross-stack conventions)
+   - Search in services/api/CODING_STYLE_BACKEND.md (Java/Spring Boot)
+   - Search in apps/mobile/CODING_STYLE_FRONTEND.md (Flutter/Dart)
+   - Search in infra/CODING_STYLE_INFRASTRUCTURE.md (Docker/CI/CD)
    - Look for exact matches, similar wording, or related concepts
 
 2. **Analyze Result**
@@ -20,11 +23,11 @@ Add the following coding directive with smart deduplication:
    - **ENTIRELY NEW** → Proceed to step 3
 
 3. **Determine Correct File + Section**
-   - **Backend-specific** (Java, Spring Boot, Maven, JPA) → CODING_STYLE.md Part 2: Backend
-   - **Frontend-specific** (Flutter, Dart, Riverpod, widgets) → CODING_STYLE.md Part 3: Frontend
-   - **Infrastructure** (Docker, Testcontainers, CI/CD) → CODING_STYLE.md Part 4: Infrastructure
-   - **Architecture/Project-wide** (DDD, testing strategy, documentation) → CLAUDE.md Part 1: General
-   - **Cross-stack conventions** (naming, Git workflow) → CODING_STYLE.md Part 1: General
+   - **Backend-specific** (Java, Spring Boot, Maven, JPA) → services/api/CODING_STYLE_BACKEND.md
+   - **Frontend-specific** (Flutter, Dart, Riverpod, widgets) → apps/mobile/CODING_STYLE_FRONTEND.md
+   - **Infrastructure** (Docker, Testcontainers, CI/CD) → infra/CODING_STYLE_INFRASTRUCTURE.md
+   - **Architecture/Project-wide** (DDD, testing strategy, documentation) → CLAUDE.md (appropriate part)
+   - **Cross-stack conventions** (naming, Git workflow, universal rules) → CODING_STYLE_GENERAL.md
 
 4. **Add Directive**
    - Format with proper markdown (bullet point or subsection as appropriate)

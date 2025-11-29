@@ -53,24 +53,91 @@ echo "Base branch: $BASE_BRANCH"
 
 If NO → Ask user: "Which base branch should this PR target?"
 
-## 3. Check for Uncommitted Changes
+## 3. Check for Uncommitted Changes (Soft Warning)
 
 ```bash
-# Ensure working directory is clean
-if [[ -n $(git status --porcelain) ]]; then
-  echo "⚠️ WARNING: You have uncommitted changes:"
-  git status --short
+# Check for uncommitted changes (excluding local settings)
+UNCOMMITTED=$(git status --porcelain | grep -v '.claude/settings.local.json' || true)
+
+if [[ -n "$UNCOMMITTED" ]]; then
+  echo "⚠️ WARNING: Uncommitted changes detected"
   echo ""
-  echo "Commit or stash changes before creating PR? (commit/stash/cancel)"
+  git status --short | grep -v '.claude/settings.local.json'
+  echo ""
+  echo "💡 Tip: Consider using /finish-session to commit + test before creating PR"
+  echo ""
+  echo "What would you like to do?"
+  echo "  1. Cancel and use /finish-session first (recommended)"
+  echo "  2. Commit now with manual message"
+  echo "  3. Continue anyway (PR will only include committed work)"
+  echo ""
 fi
 ```
 
-**Handle uncommitted changes:**
-- If user chooses "commit" → Use `/finish-session` workflow to commit first
-- If user chooses "stash" → `git stash` and continue
-- If user chooses "cancel" → Exit without creating PR
+**Handle user choice:**
+- **Option 1 (Cancel):** Exit with message "Run /finish-session, then /create-pr again"
+- **Option 2 (Commit now):**
+  - Prompt: "Enter commit message:"
+  - Stage all changes: `git add -A` (excluding .claude/settings.local.json)
+  - Commit with user's message + Claude Code footer
+  - Continue to PR creation
+- **Option 3 (Continue):**
+  - Warn: "⚠️ Note: Uncommitted changes won't be included in this PR"
+  - Continue to PR creation
 
-## 4. Generate PR Title and Description
+**Rationale:** Soft warning educates users about best practices (/finish-session workflow) while maintaining flexibility for alternative workflows (draft PRs, hotfixes, manual commits).
+
+## 4. Collect Automation Metrics (pulse agent)
+
+**CRITICAL:** Update metrics BEFORE creating PR to include metrics file in the PR commit.
+
+**Automatically trigger `pulse` agent** (Haiku - fast, cheap) to update automation metrics:
+
+**Mode:** `--mode=delta` (incremental update since last run)
+
+**What pulse does:**
+1. Checks `.claude/metrics/usage-stats.toml` for last metrics checkpoint
+2. Scans git commits since last checkpoint
+3. Counts new agent/command invocations
+4. Updates TOML file with consolidated totals (incremental)
+5. Completes in ~30 seconds, ~500-1000 tokens (Haiku)
+
+**Output:** Updated `.claude/metrics/usage-stats.toml`
+
+---
+
+## 5. Commit Metrics Changes
+
+**Check if metrics file was modified and commit it:**
+
+```bash
+# Check if metrics file was modified by pulse
+if git status --porcelain | grep -q '.claude/metrics/usage-stats.toml'; then
+  echo "📊 Metrics updated by pulse agent, committing changes..."
+
+  # Stage metrics file only
+  git add .claude/metrics/usage-stats.toml
+
+  # Commit with standard message
+  git commit .claude/metrics/usage-stats.toml -m "chore: Update automation metrics via pulse
+
+Updated by pulse agent before PR creation.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
+
+  echo "✅ Metrics committed to feature branch"
+else
+  echo "ℹ️ No metrics changes to commit"
+fi
+```
+
+**Rationale:** Committing metrics before PR creation ensures the PR includes all changes (code + metrics) and avoids manual intervention to add uncommitted metrics files later.
+
+---
+
+## 6. Generate PR Title and Description
 
 **Determine PR title:**
 - If `$ARGUMENTS` is provided → Use it as title
@@ -132,7 +199,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 If yes → Ask: "Enter new PR title:"
 
-## 5. Create Pull Request with GitHub CLI
+## 7. Create Pull Request with GitHub CLI
 
 ```bash
 # Create PR using gh CLI
@@ -158,9 +225,13 @@ PR_URL=$(gh pr view --json url --jq .url)
 echo "✅ Pull Request created: $PR_URL"
 ```
 
-## 6. Analyze Feature Development Workflow (Delegate to automation-sentinel)
+## 8. Analyze Feature Development Workflow (automation-sentinel agent)
 
-**Automatically trigger `automation-sentinel` agent** to analyze this feature's development:
+**Automatically trigger `automation-sentinel` agent** (Sonnet - deep analysis):
+
+**Mode:** `--mode=delta` (reads pre-collected metrics from TOML file that was committed in Step 5)
+
+**IMPORTANT:** automation-sentinel runs in **read-only analysis mode** - it reads the metrics file but does NOT modify any files. Metrics were already collected and committed by pulse in Steps 4-5.
 
 **Provide context to automation-sentinel:**
 - **Feature branch:** `$CURRENT_BRANCH`
@@ -169,6 +240,7 @@ echo "✅ Pull Request created: $PR_URL"
 - **Files changed:** Output of `git diff $BASE_BRANCH..HEAD --name-only`
 - **Duration:** First commit date → Last commit date
 - **PR URL:** `$PR_URL`
+- **Metrics file:** `.claude/metrics/usage-stats.toml` (fresh data from pulse)
 
 **Request from automation-sentinel:**
 Generate a **Feature Development Report** with:
@@ -217,11 +289,11 @@ Generate a **Feature Development Report** with:
 - Consider automation improvements identified above
 ```
 
-**Rationale:** This automatic analysis captures real-world automation usage patterns at natural feature boundaries, providing actionable insights for continuous improvement.
+**Rationale:** This automatic analysis captures real-world automation usage patterns at natural feature boundaries, providing actionable insights for continuous improvement. Since metrics were collected and committed before PR creation (Steps 4-5), the PR already includes all changes and automation-sentinel simply provides read-only analysis.
 
 ---
 
-## 7. Final Summary
+## 9. Final Summary
 
 Provide comprehensive summary:
 ```

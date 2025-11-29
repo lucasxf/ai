@@ -1,276 +1,440 @@
-# AI Laboratory
+# AI/MCP Studies Laboratory
 
-> Hands-on experiments with AI/ML/LLM technologies, starting with Model Context Protocol (MCP) studies.
+![Java 21](https://img.shields.io/badge/Java-21-orange.svg)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2+-brightgreen.svg)
+![Spring AI](https://img.shields.io/badge/Spring%20AI-MCP-blue.svg)
+![Maven](https://img.shields.io/badge/Maven-3.8+-red.svg)
+![License](https://img.shields.io/badge/License-Private-lightgrey.svg)
+
+> Laboratory for AI/ML/LLM experiments focused on **Model Context Protocol (MCP)** studies, POCs, and technical articles.
 
 **Author:** Lucas Xavier Ferreira
-**Focus:** Production-quality implementations, deep understanding, technical articles
-**Stack:** Java 21, Spring Boot 3.2+, Maven, Docker
+**Role:** Tech Manager / Software Engineering Coordinator
+**Parent Project:** [wine-reviewer](https://github.com/lucasxf/wine-reviewer/tree/develop)
+**Focus:** Backend-only (Java 21, Spring Boot 3, Spring AI, MCP)
 
 ---
 
-## 🌍 PART 1: GENERAL (Cross-stack)
+## Purpose
 
-### Repository Overview
+This repository is a **structured learning environment** for mastering **Model Context Protocol (MCP)** through hands-on POCs and technical articles. The project follows production-quality standards from [wine-reviewer](https://github.com/lucasxf/wine-reviewer/tree/develop) while focusing exclusively on backend/MCP development.
 
-This repository serves as a laboratory for exploring cutting-edge AI technologies through proof-of-concept implementations. Unlike throwaway prototypes, all code follows production-quality standards (SOLID, Clean Architecture, >80% test coverage) documented in [CODING_STYLE.md](./CODING_STYLE.md).
+### Key Objectives
+- Master MCP protocol through progressive POCs
+- Integrate Spring AI with MCP clients and servers
+- Document learnings for technical articles
+- Build reusable MCP patterns for future projects
+- Maintain production-quality code standards
 
-### Structure
+---
+
+## Repository Structure
 
 ```
 /ai
-├── README.md                          # This file - repository overview
-├── CLAUDE.md                          # AI assistant context and guidelines
-├── CODING_STYLE.md                    # Code conventions (copied from wine-reviewer)
-├── LEARNINGS.md                       # Technical discoveries and session logs (planned)
+├── README.md                          # This file
+├── CLAUDE.md                          # AI assistant context and instructions
+├── CODING_STYLE.md                    # Java/Spring Boot conventions (from wine-reviewer)
+├── LEARNINGS.md                       # MCP lessons learned (session logs)
 ├── prompts/
-│   └── PACK.md                        # AI prompt patterns (copied from wine-reviewer)
+│   └── PACK.md                        # AI prompt patterns (from wine-reviewer)
 ├── .claude/
-│   └── commands/                      # Reusable workflows (from wine-reviewer)
-│       ├── README.md                  # Command documentation
-│       ├── create-service.md
-│       ├── add-test.md
-│       └── ...
-├── mcp/                               # Model Context Protocol studies (active)
-│   ├── README.md                      # MCP POC index
-│   ├── ROADMAP.md                     # Implementation tracking
-│   ├── pom.xml                        # Parent POM
+│   ├── agents/                        # 6 custom agents
+│   │   ├── automation-sentinel.md     # Automation health monitoring
+│   │   ├── backend-code-reviewer.md   # Java/Spring Boot code review
+│   │   ├── learning-tutor.md          # MCP/Spring AI teaching
+│   │   ├── pulse.md                   # Metrics collection
+│   │   ├── session-optimizer.md       # Token efficiency
+│   │   └── tech-writer.md             # Documentation automation
+│   ├── commands/                      # 13 custom slash commands
+│   │   ├── start-session.md           # Initialize session with context
+│   │   ├── finish-session.md          # Tests + docs + commit
+│   │   ├── update-roadmap.md          # Track progress
+│   │   ├── directive.md               # Add coding rules
+│   │   ├── review-code.md             # Code quality analysis
+│   │   ├── quick-test.md              # Test specific class
+│   │   ├── test-quick.md              # Run all tests quietly
+│   │   ├── test-service.md            # Test service layer
+│   │   ├── build-quiet.md             # Clean build
+│   │   ├── verify-quiet.md            # Full verification
+│   │   └── ...                        # (see commands README)
+│   └── metrics/
+│       └── usage-stats.toml           # Automation metrics (pulse)
+├── mcp/                               # MCP studies POCs
+│   ├── README.md                      # POC index with status
 │   ├── 01-hello-world/                # POC 1: Protocol basics
-│   ├── 02-aws-cost-explorer/          # POC 2: AWS FinOps (planned)
-│   ├── 03-photo-search/               # POC 3: NL photo search (planned)
-│   └── mcp-protocol-java/             # Shared MCP library (planned)
-└── other-ai-studies/                  # Future experiments
+│   │   ├── client/                    # Java MCP Client
+│   │   ├── server/                    # Java MCP Server
+│   │   └── README.md                  # Setup and lessons
+│   ├── 02-aws-cost-explorer/          # POC 2: AWS FinOps
+│   │   ├── cost-client/               # Spring Boot client
+│   │   ├── wine-reviewer-analysis/    # S3 cost analysis
+│   │   └── README.md
+│   ├── 03-photo-search/               # POC 3: NL photo search
+│   │   ├── server/                    # MCP Server (GDrive)
+│   │   ├── indexer/                   # Vision API + embeddings
+│   │   └── README.md
+│   └── mcp-protocol-java/             # Shared MCP library
+└── other-ai-studies/                  # Future experiments (ML, LLMs)
 ```
 
-### Git Flow
+---
+
+## Tech Stack
+
+### Core Technologies
+- **Java 21** - Virtual Threads, Pattern Matching, Records
+- **Spring Boot 3.2+** - MCP servers, REST endpoints, configuration
+- **Spring AI** - MCP client integration, LLM abstractions
+- **Maven** - Dependency management, build automation
+- **Python 3.10+** - When needed (e.g., AWS Cost Explorer MCP server)
+
+### Code Quality Tools
+- **JUnit 5** - Unit and integration testing (>80% coverage target)
+- **Mockito** - Mocking framework
+- **AssertJ** - Fluent assertions
+- **Spring Boot Test** - Integration test support
+- **OpenAPI/Swagger** - API documentation (mandatory)
+
+### Principles & Patterns
+- **SOLID Principles** - Clean Architecture
+- **Constructor Injection** - No field injection
+- **@ConfigurationProperties** - Type-safe configuration
+- **Domain-Driven Design** - Clear bounded contexts
+- **Test-After-Implementation** - Write code first, tests immediately after
+
+---
+
+## Custom Automation
+
+This project includes **6 custom agents** and **16 custom slash commands** optimized for AI/MCP development workflows.
+
+### 6 Custom Agents
+
+| Agent | Purpose | Model | Primary Use |
+|-------|---------|-------|-------------|
+| **automation-sentinel** | Automation health, metrics, optimization | Sonnet | Health reports, redundancy detection |
+| **backend-code-reviewer** | Java/Spring Boot/MCP code review | Sonnet | Post-implementation review |
+| **learning-tutor** | Teaching MCP, Spring AI, patterns | Sonnet | Structured learning, exercises |
+| **pulse** | Metrics collection (agent/command usage) | Haiku | Auto-triggered for analytics |
+| **session-optimizer** | Token efficiency, session planning | Haiku | Session start, workflow optimization |
+| **tech-writer** | Documentation, Javadoc, OpenAPI, ADRs | Sonnet | Documentation automation |
+
+**See:** [.claude/agents-readme.md](.claude/agents-readme.md) for detailed agent documentation
+
+### 16 Custom Slash Commands
+
+**Workflow Commands:**
+- `/start-session [context]` - Initialize session with project context
+- `/finish-session [commit-context]` - Run tests, update docs, commit
+- `/resume-session <feature>` - Resume previous session with context
+- `/update-roadmap <what-completed>` - Track progress in ROADMAP.md
+- `/create-pr [title]` - Create PR with automation analysis
+
+**Documentation Commands:**
+- `/directive <content>` - Add coding rules with deduplication
+- `/review-code [path]` - Analyze code quality
+- `/save-response [filename]` - Save Claude's response for later
+
+**Testing Commands:**
+- `/quick-test <ServiceName>` - Test specific class
+- `/test-quick` - Run all tests quietly
+- `/test-service` - Test service layer
+
+**Build Commands:**
+- `/build-quiet` - Clean build in quiet mode
+- `/verify-quiet` - Full verification quietly
+
+**Infrastructure Commands:**
+- `/docker-start` - Start Docker services
+- `/docker-stop` - Stop Docker services
+- `/api-doc` - Open Swagger UI
+
+**See:** [.claude/commands/README.md](.claude/commands/README.md) for detailed command documentation
+
+### Pulse Agent: Metrics-Driven Automation
+
+The **pulse agent** (Haiku, fast/cheap) collects automation usage metrics:
+- Agent invocation counts
+- Command execution frequency
+- Lines of Code (LOC) trends
+- Git-tracked checkpoints (`.claude/metrics/usage-stats.toml`)
+
+**Benefits:**
+- 75% token reduction in automation workflows (delta mode vs full scan)
+- Data-driven optimization recommendations
+- Automated redundancy detection
+- Usage analytics for continuous improvement
+
+---
+
+## Git Flow Strategy
 
 ```
 main                     # Stable releases (published articles)
-  └─ develop             # Main development
-      └─ develop-mcp     # Long-lived MCP branch
-          ├─ feature/poc-01-hello-world  ← Current branch
+  └─ develop             # Main development branch
+      └─ develop-mcp     # Long-lived MCP studies branch
+          ├─ feature/poc-01-hello-world
           ├─ feature/poc-02-aws-finops
           └─ feature/poc-03-photo-search
 ```
 
 **Merge Strategy:**
-- Feature → `develop-mcp` (via PR after POC completion)
+- Feature branches → `develop-mcp` (via PR)
 - `develop-mcp` → `develop` (after POC validation)
 - `develop` → `main` (after article publication)
 
-### References
+---
 
-This repository reuses conventions from:
-- [wine-reviewer](https://github.com/lucasxf/wine-reviewer/tree/develop) - Spring Boot patterns, AI workflows
-- [estudos](https://github.com/lucasxf/estudos/tree/develop) - Advanced architecture (DDD, CQRS)
+## MCP Studies Plan
+
+### Phase 1: Foundation (Weeks 1-2)
+
+**POC 1: Hello World MCP**
+- Goal: Understand MCP protocol basics
+- Stack: Java client + Java server (stdio transport)
+- Tools: Simple calculator (add, multiply, random)
+- Deliverable: Working client-server + article
+
+**POC 2: AWS Cost Explorer**
+- Goal: Integrate with existing Python MCP server
+- Stack: Java client + awslabs/cost-explorer-mcp-server
+- Use Case: Analyze wine-reviewer's S3 costs
+- Deliverable: Cost analysis dashboard + article
+
+### Phase 2: Integration (Weeks 3-4)
+
+**POC 3: Photo Search (Google Drive)**
+- Goal: Natural language photo search
+- Stack: Java server + Vision API + Vector DB
+- Features: Semantic search, face clustering, auto-tagging
+- Deliverable: Working search system + article
+
+### Phase 3: Advanced (Weeks 5-6)
+
+**POC 4: MCP Sampling**
+- Goal: Server requests LLM via client (bidirectional)
+- Pattern: Intelligent data pipelines
+- Deliverable: Working implementation + article
+
+**POC 5: MCP Gateway**
+- Goal: Server as client (chain pattern)
+- Pattern: Aggregating multiple sources
+- Deliverable: Workflow orchestrator + article
 
 ---
 
-## ☕ PART 2: BACKEND (Java/Spring Boot)
-
-### MCP Studies (Active)
-
-**Model Context Protocol (MCP):** A standardized protocol for LLM-to-tool communication, enabling:
-- Client-Server architecture (stdio, HTTP, SSE transports)
-- Tool definitions and invocations
-- Sampling (server requests LLM via client for intelligent pipelines)
-- Multi-server orchestration (servers as clients)
-
-#### Current Status
-
-**Project:** `/mcp` directory
-**Setup:** Maven multi-module project with parent POM
-**POC 1:** Hello World MCP (In Progress)
-**Status:** Boilerplate created, architectural decisions next
-
-**Progress Tracking:** See [/mcp/ROADMAP.md](./mcp/ROADMAP.md) for detailed status
-
-#### How to Build
-
-```bash
-# Navigate to MCP directory
-cd mcp
-
-# Build all modules
-mvn clean install
-
-# Run specific POC (after implementation)
-cd 01-hello-world
-mvn spring-boot:run
-```
-
-#### Planned POCs
-
-| POC | Goal                                  | Stack                              | Status      |
-| --- | ------------------------------------- | ---------------------------------- | ----------- |
-| 1   | MCP Protocol Basics                   | Java client + server (stdio)       | In Progress |
-| 2   | AWS Cost Explorer Integration         | Java client + Python server        | Planned     |
-| 3   | Photo Search (Google Drive)           | Java server + Vision API + VectorDB | Planned     |
-| 4   | MCP Sampling (Server Requests LLM)    | Bidirectional communication        | Planned     |
-| 5   | MCP Gateway (Server as Client)        | Multi-server orchestration         | Planned     |
-
-#### Technology Stack
-
-**Core:**
-- Java 21 (LTS) with Virtual Threads
-- Spring Boot 3.2+
-- Maven 3.9+
-
-**MCP Integration:**
-- Spring AI MCP Client
-- Custom stdio transport implementation
-- JSON-RPC message codec
-
-**Testing:**
-- JUnit 5
-- Testcontainers (for integration tests)
-- Coverage target: >80%
-
-**Documentation:**
-- OpenAPI/Swagger (for REST endpoints if applicable)
-- Javadoc with `@author` and `@date`
-- Architecture diagrams (ASCII art / Mermaid)
-
-#### Code Quality Standards
-
-All code follows conventions from [CODING_STYLE.md](./CODING_STYLE.md):
-- Constructor injection only (no `@Autowired` on fields)
-- `@ConfigurationProperties` instead of `@Value`
-- OpenAPI annotations on REST endpoints
-- Test coverage >80%
-- Domain exceptions hierarchy
-- Java 21 features (records, sealed classes, pattern matching)
-
-#### Available Commands
-
-Custom workflows copied from wine-reviewer:
-
-| Command                | Purpose                                   |
-| ---------------------- | ----------------------------------------- |
-| `/create-service`      | Create Spring service with tests          |
-| `/add-test`            | Add test cases to existing code           |
-| `/review-architecture` | Review architectural decisions            |
-| `/generate-docs`       | Generate/update OpenAPI documentation    |
-
-See `/.claude/commands/README.md` for complete documentation.
-
----
-
-## 📱 PART 3: FRONTEND (Not Applicable)
-
-This repository is currently backend-focused (MCP protocol implementation in Java).
-
-If future POCs require UI (e.g., cost dashboard, photo search interface), Flutter/Dart conventions from [wine-reviewer](https://github.com/lucasxf/wine-reviewer/blob/develop/CODING_STYLE.md#-part-3-frontend-standards-flutterdart) will be applied.
-
----
-
-## 📚 Documentation
-
-### Main Documentation
-
-- [CLAUDE.md](./CLAUDE.md) - AI assistant context (who I am, work style, references)
-- [CODING_STYLE.md](./CODING_STYLE.md) - Code conventions (3-part structure: General/Backend/Frontend)
-- [/mcp/ROADMAP.md](./mcp/ROADMAP.md) - MCP project tracking and next steps
-- [LEARNINGS.md](./LEARNINGS.md) - Technical discoveries (planned, will be created during POCs)
-
-### External Resources
-
-**MCP Protocol:**
-- [Official Specification](https://modelcontextprotocol.io/docs)
-- [Spring AI MCP Docs](https://docs.spring.io/spring-ai/reference/api/mcp/mcp-overview.html)
-- [Spring AI MCP Examples](https://github.com/spring-projects-experimental/spring-ai-mcp)
-- [Baeldung Tutorial](https://www.baeldung.com/spring-ai-model-context-protocol-mcp)
-
-**Spring AI:**
-- [Official Documentation](https://docs.spring.io/spring-ai/reference/)
-- [GitHub Repository](https://github.com/spring-projects/spring-ai)
-
----
-
-## 🎯 Project Goals
-
-1. **Deep Understanding** - Master MCP protocol internals through hands-on implementation
-2. **Production Quality** - All code follows professional standards (SOLID, Clean Architecture, tests)
-3. **Knowledge Sharing** - Publish 5 technical articles (one per POC) explaining learnings
-4. **Reusable Code** - Extract MCP Java library as standalone module for community
-5. **Real-world Applications** - Build practical tools (cost analysis, photo search, etc.)
-
----
-
-## 🚀 Getting Started
+## Quick Start
 
 ### Prerequisites
+- Java 21 (OpenJDK or Oracle JDK)
+- Maven 3.8+
+- Docker (for infrastructure)
+- Claude Code CLI (for custom agents/commands)
 
-- Java 21 (LTS)
-- Maven 3.9+
-- Docker (for integration tests with Testcontainers)
-- IDE with Java 21 support (IntelliJ IDEA recommended)
-
-### Quick Start
+### Initial Setup
 
 ```bash
-# Clone the repository
-git clone https://github.com/lucasxf/ai.git
+# Clone repository
+git clone <repository-url>
 cd ai
 
-# Build MCP project
-cd mcp
-mvn clean install
+# Verify Java and Maven
+java -version   # Should show Java 21
+mvn -version    # Should show Maven 3.8+
 
-# Run POC 1 (after implementation)
-cd 01-hello-world
-mvn spring-boot:run
+# Start automation (agents available immediately)
+# No additional setup needed - agents and commands are already configured
+
+# Optional: Verify agents and commands
+ls .claude/agents/     # Should list 6 agents
+ls .claude/commands/   # Should list 13 commands
 ```
 
-### Development Workflow
+### Starting a Development Session
 
-1. **Checkout feature branch:**
-   ```bash
-   git checkout feature/poc-01-hello-world
-   ```
+```bash
+# Option 1: With session-optimizer agent (recommended)
+# In Claude Code CLI:
+@ROADMAP.md
 
-2. **Make changes following CODING_STYLE.md**
+Quick session start via session-optimizer.
 
-3. **Run tests:**
-   ```bash
-   mvn test
-   ```
+Goal: [your POC or task]
+Scope: [in/out of scope items]
 
-4. **Check coverage (target >80%):**
-   ```bash
-   mvn verify
-   ```
+# Option 2: With /start-session command
+/start-session working on MCP hello-world POC
 
-5. **Create PR to `develop-mcp` branch**
+# Option 3: Manual context loading
+# Read CLAUDE.md, CODING_STYLE.md, ROADMAP.md, and LEARNINGS.md
+```
 
----
+### Running POCs
 
-## 🤝 Contributing
+```bash
+# Navigate to POC directory
+cd mcp/01-hello-world/
 
-This is a personal learning repository, but feedback and suggestions are welcome!
+# Follow POC-specific README
+cat README.md
 
-If you find issues or have ideas:
-1. Open an issue describing the problem/idea
-2. Reference specific POC (01-hello-world, 02-aws-cost-explorer, etc.)
-3. Include code snippets or references if applicable
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see LICENSE file for details.
+# Run POC (example)
+cd client && mvn spring-boot:run
+```
 
 ---
 
-## 👤 Author
+## Documentation
+
+### Project Documentation
+- **CLAUDE.md** - AI assistant context (conventions, patterns, workflows)
+- **CODING_STYLE.md** - Java/Spring Boot conventions (from wine-reviewer)
+- **LEARNINGS.md** - MCP session logs, discoveries, problems solved
+- **ROADMAP.md** - Current status, next steps, backlog
+
+### Automation Documentation
+- **.claude/agents-readme.md** - Agent overview and usage guide
+- **.claude/commands/README.md** - Command reference and workflows
+
+### POC Documentation
+- **mcp/README.md** - POC index with status
+- **mcp/{poc}/README.md** - Individual POC setup and lessons
+
+---
+
+## Code Quality Standards
+
+This project follows strict quality standards from [wine-reviewer](https://github.com/lucasxf/wine-reviewer/tree/develop):
+
+### Architectural Standards
+- **SOLID principles** enforced
+- **Constructor injection only** (no `@Autowired` on fields)
+- **@ConfigurationProperties** instead of `@Value`
+- **OpenAPI/Swagger annotations** mandatory on all REST endpoints
+- **Test coverage >80%** for new components
+- **Domain exceptions** with proper HTTP status mapping
+
+### Testing Standards
+- **Test-after-implementation** workflow (implementation first, tests immediately after)
+- **Unit tests** for service layer logic
+- **Integration tests** for REST endpoints
+- **Mock external dependencies** (no real AWS/GCP calls in tests)
+
+### Documentation Standards
+- **README.md** in every POC directory
+- **Javadoc** with `@author` and `@date` on public APIs
+- **OpenAPI** documentation complete (all status codes documented)
+- **LEARNINGS.md** updated after each POC
+- **ADRs** (Architecture Decision Records) for major decisions
+
+---
+
+## Reference Project
+
+This project reuses conventions and automation from **wine-reviewer**:
+
+**GitHub:** https://github.com/lucasxf/wine-reviewer/tree/develop
+
+### What's Copied
+- `/CODING_STYLE.md` - Java/Spring Boot conventions
+- `/prompts/PACK.md` - AI prompt patterns
+- `/.claude/agents/` - Custom agent suite (adapted for MCP)
+- `/.claude/commands/` - Custom slash commands (adapted for MCP)
+
+### What's Adapted
+- **Agents:** Removed frontend/infra agents, focused on backend/MCP
+- **Commands:** Adapted for MCP POC workflow
+- **Documentation:** Added LEARNINGS.md for session-based discoveries
+
+### Key Files to Study
+- [wine-reviewer/CODING_STYLE.md](https://github.com/lucasxf/wine-reviewer/blob/develop/CODING_STYLE.md)
+- [wine-reviewer/prompts/PACK.md](https://github.com/lucasxf/wine-reviewer/blob/develop/prompts/PACK.md)
+- [wine-reviewer/.claude/commands/](https://github.com/lucasxf/wine-reviewer/tree/develop/.claude/commands)
+- [wine-reviewer/services/api/](https://github.com/lucasxf/wine-reviewer/tree/develop/services/api) - Spring Boot architecture reference
+
+---
+
+## Official MCP Resources
+
+### Documentation
+- [MCP Specification](https://modelcontextprotocol.io/docs)
+- [Spring AI MCP Docs](https://docs.spring.io/spring-ai/reference/api/mcp/mcp-overview.html)
+- [Spring AI MCP Examples](https://github.com/spring-projects-experimental/spring-ai-mcp)
+- [AWS Cost Explorer MCP](https://awslabs.github.io/mcp/servers/cost-explorer-mcp-server)
+- [Baeldung: Spring AI + MCP](https://www.baeldung.com/spring-ai-model-context-protocol-mcp)
+
+### Tutorials
+- [Model Context Protocol Introduction](https://www.anthropic.com/news/model-context-protocol)
+- [Building MCP Servers](https://modelcontextprotocol.io/tutorials/building-a-server)
+- [MCP Client Integration](https://modelcontextprotocol.io/tutorials/building-a-client)
+
+---
+
+## Work Style
+
+### Philosophy
+- **You code, Claude reviews** - You implement, Claude provides feedback
+- **Thoroughness over speed** - Production-quality code, not prototypes
+- **Learning through doing** - POCs as structured learning exercises
+- **Documentation-driven** - Every POC results in a technical article
+
+### Interaction Examples
+
+**Good Interaction:**
+```
+You: "Review my McpClientService implementation"
+
+Claude (via backend-code-reviewer):
+"I notice you're using field injection here:
+@Autowired
+private McpProtocolHandler handler;
+
+But in wine-reviewer's conventions, you consistently use constructor
+injection. Consider:
+
+private final McpProtocolHandler handler;
+
+public McpClientService(McpProtocolHandler handler) {
+    this.handler = handler;
+}
+
+This follows your established pattern and improves testability."
+```
+
+**Bad Interaction:**
+```
+You: "How should I implement MCP client?"
+
+Claude: "Here's a complete implementation..."
+[dumps 500 lines without asking]
+```
+
+**Key Principle:** Claude acts as technical reviewer and advisor, not primary coder.
+
+---
+
+## Contributing
+
+This is a **private learning repository**. For questions or collaboration:
+- Open an issue for discussion
+- Reference wine-reviewer patterns in proposals
+- Follow CODING_STYLE.md for consistency
+
+---
+
+## License
+
+Private repository - All rights reserved.
+
+---
+
+## Contact
 
 **Lucas Xavier Ferreira**
-- Role: Tech Manager / Software Engineering Coordinator
-- GitHub: [@lucasxf](https://github.com/lucasxf)
-- Stack: Java 21, Spring Boot 3, microservices, distributed systems
-- Philosophy: Quality over speed, production-ready over prototypes
+Tech Manager / Software Engineering Coordinator
+GitHub: [@lucasxf](https://github.com/lucasxf)
 
 ---
 
-## 🔄 Update History
-
-- **2025-11-04:** Initial README created. MCP project structure setup with parent POM, POC 1 boilerplate in progress.
+**Happy learning! Explore MCP, build POCs, and document your journey.**
