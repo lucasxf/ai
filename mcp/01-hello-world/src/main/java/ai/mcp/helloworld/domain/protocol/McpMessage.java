@@ -1,8 +1,5 @@
 package ai.mcp.helloworld.domain.protocol;
 
-import ai.mcp.helloworld.domain.protocol.request.McpRequest;
-import ai.mcp.helloworld.domain.protocol.response.McpResponse;
-
 /**
  *
  * Base sealed interface for all MCP protocol messages (JSON-RPC 2.0).

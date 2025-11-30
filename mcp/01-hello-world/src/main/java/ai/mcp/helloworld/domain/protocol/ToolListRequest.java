@@ -1,4 +1,6 @@
-package ai.mcp.helloworld.domain.protocol.request;
+package ai.mcp.helloworld.domain.protocol;
+
+import ai.mcp.helloworld.exception.InvalidToolParametersException;
 
 /**
  * Request to list all available MCP tools.
@@ -30,13 +32,13 @@ public record ToolListRequest(
 
     public ToolListRequest {
         if (!JSON_RPC_VERSION.equals(jsonRpc)) {
-            throw new IllegalArgumentException("jsonRpc must be \"2.0\"");
+            throw new InvalidToolParametersException("jsonRpc must be \"2.0\"");
         }
         if (id == null || id.isBlank()) {
-            throw new IllegalArgumentException("id must not be null or blank");
+            throw new InvalidToolParametersException("Id must not be null or blank");
         }
-        if (methodName.equalsIgnoreCase(method)) {
-            throw new IllegalArgumentException("Invalid request method");
+        if (!methodName.equalsIgnoreCase(method)) {
+            throw new InvalidToolParametersException("Invalid request method");
         }
     }
 

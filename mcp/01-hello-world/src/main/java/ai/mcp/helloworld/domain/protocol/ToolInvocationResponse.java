@@ -1,6 +1,4 @@
-package ai.mcp.helloworld.domain.protocol.response;
-
-import ai.mcp.helloworld.domain.tool.Tool;
+package ai.mcp.helloworld.domain.protocol;
 
 /**
  * @author lucas

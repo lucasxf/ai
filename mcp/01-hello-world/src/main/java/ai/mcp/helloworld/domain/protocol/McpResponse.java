@@ -1,6 +1,4 @@
-package ai.mcp.helloworld.domain.protocol.response;
-
-import ai.mcp.helloworld.domain.protocol.McpMessage;
+package ai.mcp.helloworld.domain.protocol;
 
 /**
  * Sealed interface for all MCP responses (server → client).

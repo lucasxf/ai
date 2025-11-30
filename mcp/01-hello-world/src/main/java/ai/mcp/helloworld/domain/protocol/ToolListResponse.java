@@ -1,4 +1,4 @@
-package ai.mcp.helloworld.domain.protocol.response;
+package ai.mcp.helloworld.domain.protocol;
 
 import ai.mcp.helloworld.domain.tool.Tool;
 

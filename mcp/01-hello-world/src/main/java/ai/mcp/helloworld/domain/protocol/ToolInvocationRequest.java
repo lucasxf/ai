@@ -1,4 +1,4 @@
-package ai.mcp.helloworld.domain.protocol.request;
+package ai.mcp.helloworld.domain.protocol;
 
 import java.util.Map;
 
