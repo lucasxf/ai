@@ -4,19 +4,21 @@
 # Analysis period: Project inception to 2025-11-25
 
 [metadata]
-timestamp = "2025-11-25T19:19:01-03:00"
-commit_sha = "e90bda761a2984070840d5d143bc3f25703bcbea"
-branch = "feature/update-automation-from-wine-reviewer"
+timestamp = "2025-11-30T08:55:00-03:00"
+commit_sha = "be03272cca6090a22c32da59ed82e35331b9d6fc"
+branch = "feature/poc-01-hello-world"
 schema_version = "1.0.0"
 updated_by = "pulse"
-baseline_mode = true
-total_commits_analyzed = 18
-commits_with_automations = 8
+baseline_mode = false
+update_mode = "delta"
+total_commits_analyzed = 12
+commits_with_automations = 5
+analysis_period = "e90bda7..HEAD"
 
 [agent_usage.tech-writer]
-invocations = 2
-last_used = "2025-11-25T19:19:01-03:00"
-# Inferred from: docs commits, "added prompts", "documentation review" mentions
+invocations = 3
+last_used = "2025-11-30T08:55:00-03:00"
+# Inferred from: LEARNINGS.md updates, ROADMAP.md updates, documentation improvements
 
 [agent_usage.automation-sentinel]
 invocations = 1
@@ -24,9 +26,9 @@ last_used = "2025-11-25T19:19:01-03:00"
 # Inferred from: "automation infrastructure finalization"
 
 [agent_usage.backend-code-reviewer]
-invocations = 1
-last_used = "2025-11-25T19:19:01-03:00"
-# Inferred from: setup, MCP protocol work, refactors
+invocations = 3
+last_used = "2025-11-30T08:55:00-03:00"
+# Inferred from: domain layer work, AbstractTool pattern, sealed interfaces, DDD architecture
 
 [agent_usage.session-optimizer]
 invocations = 1
@@ -34,8 +36,9 @@ last_used = "2025-11-25T19:19:01-03:00"
 # Inferred from: "claude init setup", multiple sessions
 
 [agent_usage.pulse]
-invocations = 0
-last_used = null
+invocations = 2
+last_used = "2025-11-30T08:55:00-03:00"
+# Inferred from: 2 explicit pulse invocation mentions in commits
 
 [agent_usage.flutter-implementation-coach]
 invocations = 0
@@ -54,9 +57,9 @@ invocations = 0
 last_used = null
 
 [command_usage.start-session]
-invocations = 3
-last_used = "2025-11-25T19:19:01-03:00"
-# Inferred from: multiple feature branches, init, claude setup
+invocations = 4
+last_used = "2025-11-30T08:55:00-03:00"
+# Inferred from: feature/poc-01-hello-world branch work, ongoing development
 
 [command_usage.finish-session]
 invocations = 1
@@ -64,18 +67,18 @@ last_used = "2025-11-25T19:19:01-03:00"
 # Inferred from: "complete documentation review"
 
 [command_usage.create-pr]
-invocations = 3
-last_used = "2025-11-25T19:19:01-03:00"
-# Direct count: 3 merged PRs in git log (#1, #2, #3)
+invocations = 4
+last_used = "2025-11-30T08:55:00-03:00"
+# Direct count: 4 merged PRs in git log (includes #7, #6, #4)
 
 [command_usage.update-roadmap]
 invocations = 0
 last_used = null
 
 [command_usage.review-code]
-invocations = 1
-last_used = "2025-11-25T19:19:01-03:00"
-# Inferred from: "code review workflow" commit
+invocations = 2
+last_used = "2025-11-30T08:55:00-03:00"
+# Inferred from: domain layer review, architecture validation for domain layer work
 
 [command_usage.quick-test]
 invocations = 0
@@ -114,25 +117,31 @@ invocations = 0
 last_used = null
 
 [productivity]
-# Current codebase snapshot
+# Current codebase snapshot (as of HEAD)
 # Note: Java code is in MCP POCs, not typical service structure
 current_total_locs = 0
 current_production_locs = 0
 current_test_locs = 0
 test_ratio_percent = 0.0
 
-# Period metrics (full project history)
-total_locs_added = 22511
-total_locs_deleted = 2417
-net_locs = 20094
+# Period metrics (consolidated: full project history)
+total_locs_added = 28275
+total_locs_deleted = 2454
+net_locs = 25821
 
-# Averages (based on 11 commits with changes in full history)
-avg_locs_changed_per_commit = 2257
-avg_locs_added_per_commit = 2046
-avg_locs_deleted_per_commit = 220
+# Delta since last checkpoint (2025-11-25)
+delta_locs_added = 5764
+delta_locs_deleted = 37
+delta_net = 5727
+delta_period_days = 5
+
+# Averages (based on commits with changes in full history)
+avg_locs_changed_per_commit = 2521
+avg_locs_added_per_commit = 2352
+avg_locs_deleted_per_commit = 204
 
 # Velocity metrics (informational, calculated by automation-sentinel)
-locs_per_day = 0
+locs_per_day = 1145
 locs_per_session = 0
 
 [health]
