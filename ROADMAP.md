@@ -1,8 +1,8 @@
 # AI/MCP Studies Roadmap
 
-**Last Updated:** 2025-11-25
-**Current Branch:** feature/update-automation-from-wine-reviewer
-**Project Status:** Initial setup and automation infrastructure complete
+**Last Updated:** 2025-11-30
+**Current Branch:** feature/poc-01-hello-world
+**Project Status:** MCP POC 1 - Domain layer complete, infrastructure layer next
 
 ---
 
@@ -45,6 +45,39 @@ Master Model Context Protocol (MCP) through structured POCs while maintaining pr
 - ✅ Validated all cross-references between documentation files
 - ✅ Repository ready for MCP POC implementation
 
+### ✅ Completed: MCP POC 1 - Domain Layer (2025-11-30)
+
+**Protocol Models (domain.protocol/)**
+- ✅ MCP message hierarchy with Java 21 sealed interfaces (McpMessage, McpRequest, McpResponse)
+- ✅ Concrete request/response records (ToolListRequest, ToolInvocationRequest, ToolListResponse, ToolInvocationResponse)
+- ✅ Compact constructors with validation
+- ✅ Factory methods for convenience
+- ✅ All in same package (sealed class compliance)
+
+**Tool Abstraction (domain.tool/)**
+- ✅ Tool interface with execute() contract
+- ✅ AbstractTool helper class (parameter extraction, Number flexibility)
+- ✅ ToolDefinition record (name, description, schema)
+- ✅ ToolRegistry with domain exceptions
+- ✅ ContentBlock sealed interface (TextContent, ImageContent, ResourceContent)
+
+**Calculator Tools (application.tools/)**
+- ✅ AddTool - Integer addition
+- ✅ MultiplyTool - Long multiplication (overflow prevention)
+- ✅ RandomTool - Random number generation
+
+**Exception Hierarchy (exception/)**
+- ✅ McpException base class
+- ✅ ToolNotFoundException
+- ✅ InvalidToolParametersException
+- ✅ TransportException (defined, not yet used)
+- ✅ CodecException (defined, not yet used)
+
+**Build Status:**
+- ✅ Clean compilation (mvn clean compile)
+- ✅ 31 Java source files
+- ⚠️ Tests deferred for exploration phase (0 tests currently)
+
 ---
 
 ## 🚧 In Progress
@@ -53,38 +86,118 @@ Master Model Context Protocol (MCP) through structured POCs while maintaining pr
 
 **Goal:** Understand MCP protocol basics
 
-**Implementation Plan:**
-1. Create mcp/01-hello-world/ structure
-2. Implement Java MCP Server (stdio transport)
-   - Simple calculator tools (add, multiply, random)
-   - Tool definition patterns
-   - Request/response handling
-3. Implement Java MCP Client
-   - Connection management
-   - Tool invocation
-   - Error handling
-4. Integration testing
-5. Documentation (POC README.md + LEARNINGS.md update)
+**Status:** Domain layer complete, infrastructure layer next
 
-**Deliverables:**
-- Working client-server communication
-- Calculator tools functional
-- POC documentation complete
-- Technical article draft (1st version)
+**What's Done:**
+- ✅ Project structure created (mcp/01-hello-world/)
+- ✅ Domain layer complete (protocol models, tools, abstractions)
+- ✅ Calculator tools implemented (add, multiply, random)
+- ✅ Clean compilation (31 Java source files)
 
-**Estimated Duration:** 2-3 hours coding + 1-2 hours documentation
+**What's Next:**
+1. Infrastructure layer (JsonRpcCodec, StdioTransport)
+2. Application layer (McpClient, McpServer)
+3. Integration testing (deferred until after exploration)
+4. Documentation (POC README.md + LEARNINGS.md update)
 
-**Status:** Ready to start (pending merge of feature/update-automation-from-wine-reviewer)
+**Current Focus:** Infrastructure layer implementation
 
-**Blockers:**
-- ⏳ Merge feature/update-automation-from-wine-reviewer → develop
-- ⏳ Create develop-mcp branch from develop
+**Deliverables (Updated):**
+- ✅ Domain layer with Java 21 features
+- 🚧 Infrastructure layer (codec + transport)
+- 🚧 Application layer (client + server)
+- ⏳ Integration testing (deferred for exploration)
+- ⏳ POC documentation
+- ⏳ Technical article draft
+
+**Note on Testing Strategy:**
+- Unit/integration tests deferred for exploration phase
+- Focus on understanding MCP protocol through working implementation
+- Tests to be added after POC demonstrates end-to-end functionality
 
 ---
 
 ## 📋 Next Steps (Prioritized)
 
-### Priority 2: MCP POC 2 - AWS Cost Explorer (Week 2)
+### Priority 1: MCP POC 1 - Infrastructure Layer
+
+**Goal:** Implement codec and transport for MCP communication
+
+**Implementation Tasks:**
+1. JsonRpcCodec (infrastructure/codec/)
+   - Encode McpRequest/McpResponse to JSON-RPC 2.0
+   - Decode JSON-RPC to McpRequest/McpResponse
+   - Jackson-based serialization
+   - Error handling for malformed JSON
+
+2. StdioTransport (infrastructure/transport/)
+   - Read JSON-RPC messages from stdin
+   - Write JSON-RPC messages to stdout
+   - Line-based protocol (newline-delimited JSON)
+   - Process management (spawn server process)
+
+**Deliverables:**
+- Working JSON codec (encode/decode)
+- Working stdio transport (read/write)
+- Unit tests for codec (if time permits)
+
+**Estimated Duration:** 2-3 hours
+
+---
+
+### Priority 2: MCP POC 1 - Application Layer
+
+**Goal:** Implement MCP client and server
+
+**Implementation Tasks:**
+1. McpServer (application/server/)
+   - Handle tools/list requests
+   - Handle tools/call requests
+   - Invoke tools via ToolRegistry
+   - Return ContentBlock results
+   - Error handling (tool not found, invalid params)
+
+2. McpClient (application/client/)
+   - Send tools/list request
+   - Send tools/call request
+   - Parse responses
+   - Handle errors
+
+**Deliverables:**
+- Working MCP server
+- Working MCP client
+- End-to-end communication (client ↔ server)
+
+**Estimated Duration:** 2-3 hours
+
+---
+
+### Priority 3: MCP POC 1 - Testing & Documentation
+
+**Goal:** Validate POC and document learnings
+
+**Tasks:**
+1. Integration testing
+   - Test client-server communication
+   - Test all calculator tools
+   - Test error scenarios
+   - (Unit tests optional for exploration phase)
+
+2. Documentation
+   - Create mcp/01-hello-world/README.md
+   - Update LEARNINGS.md with architectural decisions
+   - Draft technical article
+
+**Deliverables:**
+- POC README with setup instructions
+- Updated LEARNINGS.md
+- Technical article draft (1st version)
+
+**Estimated Duration:** 1-2 hours
+
+---
+
+### Priority 4: MCP POC 2 - AWS Cost Explorer (Week 2)
 
 **Goal:** Integrate with existing Python MCP server
 
@@ -107,7 +220,7 @@ Master Model Context Protocol (MCP) through structured POCs while maintaining pr
 
 ---
 
-### Priority 3: Documentation Review Cycle (After Each POC)
+### Priority 5: Documentation Review Cycle (After Each POC)
 
 **Continuous Tasks:**
 - Update LEARNINGS.md with POC insights
@@ -201,10 +314,30 @@ Master Model Context Protocol (MCP) through structured POCs while maintaining pr
 
 ## 📝 Notes
 
+### Testing Strategy Decision (2025-11-30)
+
+**Decision:** Defer unit/integration tests for POC 1 exploration phase
+
+**Rationale:**
+- Primary goal: Understand MCP protocol through hands-on implementation
+- POC nature: Exploratory learning, not production system
+- Tests planned after end-to-end functionality demonstrated
+
+**Action Items (Future):**
+- Add tests after POC 1 demonstrates working client-server communication
+- Target >80% coverage for domain layer (Tool, ToolRegistry, AbstractTool)
+- Integration tests for JsonRpcCodec and StdioTransport
+- End-to-end tests for complete client-server scenarios
+
+**Documentation:**
+- Test deferral documented in ROADMAP.md
+- Will revisit testing strategy after Phase 1 POCs complete
+
+---
+
 ### Architecture Decisions Pending
 - Vector database selection for POC 3 (Pinecone vs Weaviate vs pgvector)
 - MCP transport layer for production use (stdio vs SSE)
-- Testing strategy for MCP servers (unit vs integration focus)
 
 ### Dependencies
 - Java 21 ✅
@@ -229,4 +362,4 @@ Master Model Context Protocol (MCP) through structured POCs while maintaining pr
 - Weekly progress review (recommended)
 
 **Owned By:** Lucas Xavier Ferreira
-**Last Review:** 2025-11-25
+**Last Review:** 2025-11-30
