@@ -25,6 +25,7 @@ public record ToolListRequest(
         String[] params) implements McpRequest {
 
     private static final String methodName = "tools/list";
+    private static final String JSON_RPC_VERSION = "2.0";
 
     public static ToolListRequest create(String id) {
         return new ToolListRequest(id, JSON_RPC_VERSION, methodName, null);
