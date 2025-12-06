@@ -1,5 +1,7 @@
 package ai.mcp.helloworld.domain.protocol;
 
+import ai.mcp.helloworld.exception.InvalidToolParametersException;
+
 import java.util.Map;
 
 /**
@@ -36,7 +38,7 @@ public record ToolInvocationRequest(
             String toolName,
             Map<String, Object> arguments) {
         var params = new ToolCallParams(toolName, arguments);
-        return new ToolInvocationRequest(id, JSON_RPC_VERSION, "tools/call", params);
+        return new ToolInvocationRequest(id, "2.0", "tools/call", params);
     }
 
     /**
@@ -44,13 +46,13 @@ public record ToolInvocationRequest(
      */
     public ToolInvocationRequest {
         if (id == null || id.isBlank()) {
-            throw new IllegalArgumentException("ID cannot be null or blank");
+            throw new InvalidToolParametersException("ID cannot be null or blank");
         }
         if (method == null || method.isBlank()) {
-            throw new IllegalArgumentException("Method cannot be null or blank");
+            throw new InvalidToolParametersException("Method cannot be null or blank");
         }
         if (params == null || params.isEmpty()) {
-            throw new IllegalArgumentException("Params cannot be null or empty");
+            throw new InvalidToolParametersException("Params cannot be null or empty");
         }
     }
 
@@ -66,10 +68,10 @@ public record ToolInvocationRequest(
          */
         public ToolCallParams {
             if (name == null || name.isBlank()) {
-                throw new IllegalArgumentException("Invalid tool name");
+                throw new InvalidToolParametersException("Invalid tool name");
             }
             if (arguments == null || arguments.isEmpty()) {
-                throw new IllegalArgumentException("Invalid tool arguments");
+                throw new InvalidToolParametersException("Invalid tool arguments");
             }
         }
 

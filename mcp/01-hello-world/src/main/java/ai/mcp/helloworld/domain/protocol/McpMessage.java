@@ -15,21 +15,13 @@ package ai.mcp.helloworld.domain.protocol;
  */
 public sealed interface McpMessage permits McpRequest, McpResponse {
 
-    String JSON_RPC_VERSION = "2.0";
-
     /**
      * Unique identifier for request-response correlation.
-     * Can be string or number in JSON-RPC spec, we use String for simplicity.
      *
      * @return this message ID.
      */
-    String id();
+    Object id();
 
-    /**
-     * JSON-RPC protocol version (always "2.0").
-     *
-     * @return "2.0"
-     */
     String jsonRpc();
 
 }

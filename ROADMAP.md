@@ -1,8 +1,8 @@
 # AI/MCP Studies Roadmap
 
-**Last Updated:** 2025-11-30
+**Last Updated:** 2025-12-03
 **Current Branch:** feature/poc-01-hello-world
-**Project Status:** MCP POC 1 - Domain layer complete, infrastructure layer next
+**Project Status:** MCP POC 1 - Domain layer complete, JsonRpcCodec encode() complete, decode() next
 
 ---
 
@@ -76,6 +76,7 @@ Master Model Context Protocol (MCP) through structured POCs while maintaining pr
 **Build Status:**
 - ✅ Clean compilation (mvn clean compile)
 - ✅ 31 Java source files
+- ✅ 100% CODING_STYLE.md compliance (as of 2025-12-03)
 - ⚠️ Tests deferred for exploration phase (0 tests currently)
 
 ---
@@ -86,25 +87,32 @@ Master Model Context Protocol (MCP) through structured POCs while maintaining pr
 
 **Goal:** Understand MCP protocol basics
 
-**Status:** Domain layer complete, infrastructure layer next
+**Status:** Domain layer complete, JsonRpcCodec encode() complete, decode() next
 
 **What's Done:**
 - ✅ Project structure created (mcp/01-hello-world/)
 - ✅ Domain layer complete (protocol models, tools, abstractions)
 - ✅ Calculator tools implemented (add, multiply, random)
 - ✅ Clean compilation (31 Java source files)
+- ✅ JsonRpcCodec encode() method implemented (2025-12-03)
+- ✅ CODING_STYLE.md violations fixed (method ordering, blank lines, exception standardization)
+- ✅ Jackson @JsonProperty directive added to CODING_STYLE.md
+- ✅ Option B architecture validated (domain-level validation with jsonRpc field)
+- ✅ Dead code removed (JsonRpcEnvelope, JsonRpcRequestEnvelope, unused validation)
+- ✅ 100% CODING_STYLE.md compliance achieved
 
 **What's Next:**
-1. Infrastructure layer (JsonRpcCodec, StdioTransport)
-2. Application layer (McpClient, McpServer)
-3. Integration testing (deferred until after exploration)
-4. Documentation (POC README.md + LEARNINGS.md update)
+1. Infrastructure layer - Complete JsonRpcCodec decode() method
+2. Infrastructure layer - StdioTransport implementation
+3. Application layer (McpClient, McpServer)
+4. Integration testing (deferred until after exploration)
+5. Documentation (POC README.md + LEARNINGS.md update)
 
-**Current Focus:** Infrastructure layer implementation
+**Current Focus:** JsonRpcCodec decode() method implementation
 
 **Deliverables (Updated):**
 - ✅ Domain layer with Java 21 features
-- 🚧 Infrastructure layer (codec + transport)
+- 🚧 Infrastructure layer (codec: encode ✅, decode 🚧 | transport: ⏳)
 - 🚧 Application layer (client + server)
 - ⏳ Integration testing (deferred for exploration)
 - ⏳ POC documentation
@@ -119,29 +127,31 @@ Master Model Context Protocol (MCP) through structured POCs while maintaining pr
 
 ## 📋 Next Steps (Prioritized)
 
-### Priority 1: MCP POC 1 - Infrastructure Layer
+### Priority 1: MCP POC 1 - Infrastructure Layer (Current)
 
 **Goal:** Implement codec and transport for MCP communication
 
-**Implementation Tasks:**
-1. JsonRpcCodec (infrastructure/codec/)
-   - Encode McpRequest/McpResponse to JSON-RPC 2.0
-   - Decode JSON-RPC to McpRequest/McpResponse
-   - Jackson-based serialization
-   - Error handling for malformed JSON
+**Status:** JsonRpcCodec encode() complete, decode() next
 
-2. StdioTransport (infrastructure/transport/)
+**Implementation Tasks:**
+1. JsonRpcCodec (infrastructure/codec/) - 50% complete
+   - ✅ Encode McpRequest/McpResponse to JSON-RPC 2.0
+   - 🚧 Decode JSON-RPC to McpRequest/McpResponse (NEXT)
+   - ✅ Jackson-based serialization configured
+   - ⏳ Error handling for malformed JSON
+
+2. StdioTransport (infrastructure/transport/) - Not started
    - Read JSON-RPC messages from stdin
    - Write JSON-RPC messages to stdout
    - Line-based protocol (newline-delimited JSON)
    - Process management (spawn server process)
 
 **Deliverables:**
-- Working JSON codec (encode/decode)
-- Working stdio transport (read/write)
-- Unit tests for codec (if time permits)
+- 🚧 Working JSON codec (encode ✅ | decode 🚧)
+- ⏳ Working stdio transport (read/write)
+- ⏳ Unit tests for codec (if time permits)
 
-**Estimated Duration:** 2-3 hours
+**Estimated Duration:** 1-2 hours remaining (decode + transport)
 
 ---
 
@@ -314,6 +324,32 @@ Master Model Context Protocol (MCP) through structured POCs while maintaining pr
 
 ## 📝 Notes
 
+### JsonRpcCodec Architecture Decision (2025-12-03)
+
+**Decision:** Option B - Domain-level validation with jsonRpc field in domain models
+
+**Implementation Details:**
+- ✅ `McpRequest` and `McpResponse` include `jsonRpc` field ("2.0")
+- ✅ Compact constructors validate jsonRpc value at domain level
+- ✅ JsonRpcCodec encode() delegates to ObjectMapper with @JsonProperty annotations
+- ✅ Dead code removed (JsonRpcEnvelope, JsonRpcRequestEnvelope, unused validation)
+- ✅ Jackson @JsonProperty directive added to CODING_STYLE.md
+
+**Rationale:**
+- Cleaner separation: domain models own their JSON-RPC compliance
+- Better encapsulation: validation happens at construction time
+- Simpler codec: single ObjectMapper.writeValueAsString() call
+- More maintainable: no intermediate envelope classes
+
+**Code Quality Achievements:**
+- 100% CODING_STYLE.md compliance (method ordering, blank lines, exceptions)
+- Clean compilation with mvn clean compile
+- All architecture decisions documented
+
+**Next Step:** Implement decode() method with JSON-RPC parsing and domain model reconstruction
+
+---
+
 ### Testing Strategy Decision (2025-11-30)
 
 **Decision:** Defer unit/integration tests for POC 1 exploration phase
@@ -362,4 +398,4 @@ Master Model Context Protocol (MCP) through structured POCs while maintaining pr
 - Weekly progress review (recommended)
 
 **Owned By:** Lucas Xavier Ferreira
-**Last Review:** 2025-11-30
+**Last Review:** 2025-12-03

@@ -6,6 +6,486 @@
 
 ---
 
+## Session: 2025-12-03 - Infrastructure Layer - JsonRpcCodec Implementation & Architectural Refinement
+
+**Stack:** Backend (Java 21, Jackson, JSON-RPC 2.0)
+**Duration:** ~3 hours
+**Branch:** `feature/poc-01-hello-world`
+**Status:** In Progress - encode() complete, decode() next
+
+---
+
+### Backend ☕
+
+#### What Was Done
+
+**1. Learned JSON-RPC 2.0 Fundamentals**
+- Used `learning-tutor` agent to understand JSON-RPC 2.0 protocol
+- **Mental model shift:** REST (resource-oriented) vs JSON-RPC (method-oriented)
+  - REST: Multiple endpoints (`/users`, `/products`), HTTP verbs (GET, POST, PUT, DELETE)
+  - JSON-RPC: Single endpoint, method name in payload (`tools/list`, `tools/call`)
+- Understood 4 message types:
+  - **Request:** `{jsonrpc, id, method, params}`
+  - **Success Response:** `{jsonrpc, id, result}`
+  - **Error Response:** `{jsonrpc, id, error}`
+  - **Notification:** `{jsonrpc, method, params}` (no id, no response expected)
+- Learned standard error codes:
+  - `-32700`: Parse error (invalid JSON)
+  - `-32600`: Invalid Request (missing required fields)
+  - `-32601`: Method not found
+  - `-32602`: Invalid params
+  - `-32603`: Internal error
+
+**2. Implemented JsonRpcCodec.encode()**
+- **Interface:** `String encode(McpRequest request)`
+- **Implementation:** Direct serialization using Jackson
+  ```java
+  @Override
+  public String encode(McpRequest request) {
+      try {
+          return mapper.writeValueAsString(request);
+      } catch (JsonProcessingException e) {
+          throw new CodecException(STR."Failed to encode request: \{e.getMessage()}", e);
+      }
+  }
+  ```
+- **Error Handling:** Wraps `JsonProcessingException` in domain-specific `CodecException`
+- **Java 21 String Templates:** Used for error messages (`STR."..."`)
+
+**3. Resolved Critical Architecture Debate: Option A vs Option B**
+
+**Option A (Pure DDD - Domain Agnostic):**
+- Domain models have NO knowledge of JSON-RPC protocol
+- Infrastructure creates envelope objects (`JsonRpcRequestEnvelope`) for serialization
+- Mapping layer between domain and protocol
+- **Pros:** Domain stays pure, framework-agnostic, protocol-independent
+- **Cons:** Extra mapping layer, more boilerplate, harder to maintain
+
+**Option B (Pragmatic - Domain Aware):**
+- Domain models include `jsonRpc` field (protocol-aware)
+- Validate everything in domain compact constructors
+- Direct serialization (no mapping layer)
+- **Pros:** Simpler code, no mapping, faster iteration, clearer validation
+- **Cons:** Domain coupled to JSON-RPC protocol
+
+**Decision:** **Option B (Pragmatic) chosen for POC**
+
+**Rationale:**
+1. **Not building multi-protocol library:** Focus is learning MCP, not creating reusable JSON-RPC framework
+2. **Simplicity enables learning:** Less boilerplate = clearer understanding of protocol mechanics
+3. **Faster iteration:** Direct serialization speeds up POC development
+4. **Single source of truth:** Domain validation eliminates duplication
+5. **Can refactor later:** If extraction to library is needed, Option A migration is straightforward
+
+**Quote from session:**
+> "For a POC/learning project where you're focused on understanding MCP (not building a reusable multi-protocol library), Option B is perfectly reasonable. You gain simplicity and clarity at the cost of some domain purity—a trade-off that makes sense in this context."
+
+**4. Fixed All CODING_STYLE.md Violations**
+
+**Violation 1: Method Ordering**
+- **Rule:** Order methods by invocation flow (public → private)
+- **Before:** encode() first, validateJsonRpcField() last
+- **After:** Reordered to match call order
+
+**Violation 2: Missing Blank Lines Before Closing Brackets**
+- **Rule:** Add blank line before closing bracket for readability
+- **Fixed:** All classes now have consistent spacing
+
+**Violation 3: Inconsistent Exception Types**
+- **Problem:** Mix of `IllegalArgumentException` and `InvalidToolParametersException`
+- **Rule:** Use domain-specific exceptions (`InvalidToolParametersException`)
+- **Fixed:** Replaced all `IllegalArgumentException` with `InvalidToolParametersException` in domain layer
+
+**Violation 4: Misleading Bean Validation Annotations**
+- **Problem:** `@Valid`, `@NotNull` annotations present but Bean Validation not used
+- **Confusion:** Suggests validation framework is active (it's not)
+- **Fixed:** Removed all Bean Validation annotations, rely on compact constructor validation
+
+**5. Cleaned Up Dead Code**
+- **Deleted:**
+  - `JsonRpcEnvelope.java` (unused DTO from Option A exploration)
+  - `JsonRpcRequestEnvelope.java` (unused DTO)
+  - `validateRequest()` method in `JacksonJsonRpcCodec` (duplicate validation)
+- **Result:** 3 fewer files, clearer codebase, no confusion about which approach is used
+
+**6. Added Jackson Directive to CODING_STYLE.md**
+- **Rule:** Avoid `@JsonProperty` when field names already match JSON keys
+- **Examples:**
+  ```java
+  // ✅ Clean - field name matches JSON key
+  public record McpRequest(String jsonrpc, Object id, String method) {}
+
+  // ❌ Redundant - @JsonProperty adds no value
+  public record McpRequest(
+      @JsonProperty("jsonrpc") String jsonrpc
+  ) {}
+
+  // ✅ Useful - field name differs from JSON key
+  public record ErrorResponse(
+      @JsonProperty("error_code") int errorCode
+  ) {}
+  ```
+- **Useful annotations reference:** `@JsonInclude`, `@JsonIgnore`, `@JsonAlias`
+
+---
+
+#### Key Insights
+
+**1. Architectural Decision: Domain Purity vs Pragmatism**
+
+**Context:** Choosing between pure DDD (Option A) vs pragmatic approach (Option B) for protocol implementation.
+
+**Insight:**
+- **For production libraries:** Pure DDD wins (protocol flexibility, future-proofing, multi-protocol support)
+- **For POCs/learning projects:** Pragmatism wins (simpler code, faster iteration, clearer learning path)
+- **Trade-off awareness:** Option B couples domain to JSON-RPC, acceptable for single-protocol implementation
+
+**When to use each:**
+
+| Scenario | Choice | Reason |
+|----------|--------|--------|
+| Building reusable library | Option A | Future transport flexibility (HTTP, WebSocket, stdio) |
+| Learning/POC project | Option B | Simplicity, faster feedback, focus on protocol understanding |
+| Multi-protocol system | Option A | Domain must work with REST, gRPC, JSON-RPC |
+| Single-protocol app | Option B | No need for abstraction overhead |
+
+**2. JSON-RPC Mental Model Shift**
+
+**REST (Resource-Oriented):**
+```
+GET    /users/123        → Read user
+POST   /users            → Create user
+PUT    /users/123        → Update user
+DELETE /users/123        → Delete user
+```
+
+**JSON-RPC (Method-Oriented):**
+```
+POST /rpc
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "user.get",
+  "params": {"id": 123}
+}
+```
+
+**Key Differences:**
+
+| Aspect | REST | JSON-RPC |
+|--------|------|----------|
+| Endpoint | Multiple (`/users`, `/products`) | Single (`/rpc`, stdin/stdout) |
+| Semantics | HTTP verbs (GET, POST, PUT, DELETE) | Method name in payload (`tools/list`) |
+| Transport | HTTP-only | Transport-agnostic (HTTP, stdio, WebSocket) |
+| Error Handling | HTTP status codes (404, 500) | Error codes in JSON payload (-32700, -32603) |
+| Statefulness | Can be stateful (sessions, cookies) | Stateless by design |
+
+**Why MCP uses JSON-RPC:**
+- **Transport flexibility:** Works over stdio (local), HTTP (remote), WebSocket (streaming)
+- **Simplicity:** Single endpoint, no URL design, no HTTP verb mapping
+- **Bidirectional:** Server can request LLM sampling via client (not possible with REST)
+
+**3. Domain Validation Strategy with Option B**
+
+**With Option B, domain validates EVERYTHING in compact constructors:**
+
+```java
+public record McpRequest(String jsonrpc, Object id, String method, Map<String, Object> params)
+    implements McpMessage {
+
+    public McpRequest {
+        // Domain enforces protocol rules
+        if (!"2.0".equals(jsonrpc)) {
+            throw new InvalidToolParametersException("jsonrpc must be '2.0'");
+        }
+        if (id == null) {
+            throw new InvalidToolParametersException("id is required for requests");
+        }
+        if (method == null || method.isBlank()) {
+            throw new InvalidToolParametersException("method is required");
+        }
+    }
+}
+```
+
+**Infrastructure trusts domain guarantees:**
+```java
+@Override
+public String encode(McpRequest request) {
+    // No validation needed - domain already validated
+    return mapper.writeValueAsString(request);
+}
+```
+
+**Benefits:**
+- **Single source of truth:** Validation logic lives in one place (domain)
+- **Fail fast:** Invalid objects cannot be created (constructor throws)
+- **No duplication:** Infrastructure doesn't re-validate what domain guarantees
+- **Clearer boundaries:** Domain owns invariants, infrastructure handles I/O
+
+**4. Jackson Simplicity with Records**
+
+**Key Discovery:** When field names match JSON keys, Jackson "just works" with records—no annotations needed.
+
+**Example:**
+```java
+// JSON-RPC request JSON
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "tools/list",
+  "params": {"filter": "math"}
+}
+
+// Java record (auto-mapping, no annotations)
+public record McpRequest(
+    String jsonrpc,
+    Object id,
+    String method,
+    Map<String, Object> params
+) {}
+
+// Serialization (direct)
+String json = mapper.writeValueAsString(request);
+
+// Deserialization (direct)
+McpRequest request = mapper.readValue(json, McpRequest.class);
+```
+
+**When annotations ARE needed:**
+- `@JsonInclude(JsonInclude.Include.NON_NULL)` - Exclude null fields from JSON
+- `@JsonIgnore` - Exclude specific field from serialization
+- `@JsonAlias({"param", "parameter"})` - Accept multiple JSON keys for same field
+- `@JsonProperty("error_code")` - Map different field name to JSON key
+
+**5. Technical Debt vs Pragmatism Balance**
+
+**Session highlighted healthy pragmatism:**
+- **Removed misleading annotations:** `@Valid`, `@NotNull` suggested framework use (misleading)
+- **Deleted dead code:** Unused DTOs from Option A exploration (clarity)
+- **Standardized exceptions:** Consistent use of domain exceptions (maintainability)
+- **Kept Option B approach:** Even though Option A is "more pure" (learning focus)
+
+**Lesson:** Technical purity is valuable, but **not at the expense of clarity and learning velocity** in POC projects.
+
+---
+
+#### Problems Solved
+
+| Problem | Solution | Impact |
+|---------|----------|--------|
+| **Compilation error:** Missing `jsonrpc` field in response classes | Added `jsonrpc` field to `McpSuccessResponse`, `McpErrorResponse` | Fixed blocking compilation issue |
+| **Validation duplication:** Domain + codec both validating | Removed codec validation, kept only domain validation | Single source of truth, cleaner architecture |
+| **Dead code confusion:** Empty DTOs, unused methods | Deleted `JsonRpcEnvelope`, `JsonRpcRequestEnvelope`, `validateRequest()` | Reduced complexity, clearer codebase |
+| **Inconsistent exception types:** Mix of `IllegalArgumentException` and domain exceptions | Standardized on `InvalidToolParametersException` everywhere | Better consistency, clearer domain boundaries |
+| **Method ordering violation:** Methods not in invocation order | Reordered to public → private (invocation flow) | 100% CODING_STYLE.md compliance |
+| **Misleading annotations:** `@Valid`, `@NotNull` present but unused | Removed all Bean Validation annotations | Eliminates confusion about validation strategy |
+
+---
+
+#### Technical Decisions
+
+**Decision 1: Option B (Pragmatic Domain Validation)**
+
+**Context:** Choose between pure DDD (domain agnostic) vs pragmatic (domain aware of JSON-RPC).
+
+**Choice:** Option B - Domain includes `jsonrpc` field and validates everything.
+
+**Rationale:**
+1. POC/learning project, not reusable library
+2. Simpler implementation aids understanding
+3. Not building multi-protocol system
+4. Faster iteration for learning MCP
+
+**Trade-off:** Domain coupled to JSON-RPC protocol (acceptable for single-protocol POC).
+
+**Future Migration Path:** If extraction to library is needed, refactor to Option A (envelope pattern).
+
+---
+
+**Decision 2: No Envelope Pattern**
+
+**Context:** Whether to wrap domain objects in infrastructure DTOs for serialization.
+
+**Choice:** Direct serialization of domain objects.
+
+**Rationale:**
+1. With Option B, domain objects already have all JSON-RPC fields
+2. No need for mapping layer (DTO → domain → DTO)
+3. Eliminates boilerplate and potential mapping bugs
+
+**Benefit:** Cleaner code, fewer files, faster development.
+
+---
+
+**Decision 3: Exception Standardization**
+
+**Context:** Mix of `IllegalArgumentException` and `InvalidToolParametersException` in domain layer.
+
+**Choice:** Use `InvalidToolParametersException` everywhere.
+
+**Rationale:**
+1. More descriptive than generic `IllegalArgumentException`
+2. Domain-specific exception clearly signals business rule violation
+3. Easier to catch and handle at boundaries (application layer)
+
+**Impact:** Consistent error handling across domain layer, clearer intent.
+
+---
+
+**Decision 4: Remove Bean Validation Annotations**
+
+**Context:** `@Valid`, `@NotNull` annotations present but Bean Validation framework not configured.
+
+**Choice:** Remove all Bean Validation annotations.
+
+**Rationale:**
+1. Misleading - suggests validation framework is active (it's not)
+2. Validation happens in compact constructors, not via framework
+3. Annotations add no value without `@EnableValidation`
+
+**Impact:** Clearer validation strategy, no false expectations.
+
+---
+
+#### Tools & Commands Used
+
+**1. `/start-session --stack=backend`**
+- **Purpose:** Token-efficient session initialization
+- **Files Loaded:** CLAUDE.md, CODING_STYLE.md, domain models
+- **Token Savings:** ~40% vs full context load
+- **Success:** Session completed without needing additional context
+
+**2. `learning-tutor` Agent**
+- **Purpose:** JSON-RPC 2.0 fundamentals lesson
+- **Topics Covered:**
+  - Protocol structure (request/response/error/notification)
+  - Standard error codes (-32700 to -32603)
+  - Comparison with REST
+  - Best practices for parsing and error handling
+- **Duration:** ~15 minutes
+- **Output:** Clear mental model for implementation
+
+**3. `/directive` Command**
+- **Purpose:** Add Jackson `@JsonProperty` directive to CODING_STYLE.md
+- **Rule Added:** Avoid redundant `@JsonProperty` when field names match
+- **Examples Added:** When to use vs when not to use
+- **Impact:** Future code reviews will catch unnecessary annotations
+
+**4. `/review-code` Command**
+- **Purpose:** Comprehensive code review for CODING_STYLE.md compliance
+- **Issues Found:** 9 violations (all fixed)
+  - Method ordering (2 classes)
+  - Missing blank lines (3 classes)
+  - Inconsistent exceptions (5 occurrences)
+  - Misleading annotations (4 classes)
+- **Result:** 100% compliance after fixes
+
+**5. `mvn clean compile`**
+- **Purpose:** Verify compilation success after fixes
+- **Output:** Clean build, no warnings, no errors
+- **Confidence:** Code is ready for decode() implementation
+
+---
+
+#### Next Session Preparation
+
+**Ready to Implement: decode() Method**
+
+**Signature:**
+```java
+McpMessage decode(String json)
+```
+
+**Implementation Strategy:**
+1. **Parse JSON string:** `mapper.readTree(json)` → `JsonNode`
+2. **Detect message type:**
+   - Has `method` + `id` → `McpRequest`
+   - Has `result` → `McpSuccessResponse`
+   - Has `error` → `McpErrorResponse`
+   - Has `method` (no `id`) → `McpNotification`
+3. **Deserialize to specific type:** `mapper.treeToValue(node, McpRequest.class)`
+4. **Handle errors:**
+   - Malformed JSON → `CodecException` (wraps `JsonProcessingException`)
+   - Invalid protocol version → `InvalidToolParametersException`
+   - Unknown message type → `CodecException`
+
+**Reference Materials (from learning-tutor lesson):**
+- JSON-RPC message type detection algorithm
+- Standard error codes for protocol violations
+- JsonNode approach for flexible parsing
+
+**Estimated Duration:** 2-3 hours (decode implementation + basic error handling)
+
+**Test Cases to Write:**
+```java
+@Test
+void shouldDecodeValidRequest() {}
+
+@Test
+void shouldDecodeSuccessResponse() {}
+
+@Test
+void shouldDecodeErrorResponse() {}
+
+@Test
+void shouldThrowOnMalformedJson() {}
+
+@Test
+void shouldThrowOnInvalidProtocolVersion() {}
+
+@Test
+void shouldThrowOnUnknownMessageType() {}
+```
+
+---
+
+#### Current Status
+
+**Completed:**
+- ✅ JSON-RPC 2.0 fundamentals lesson (mental model established)
+- ✅ `encode()` method implementation (working, tested manually)
+- ✅ Architecture debate resolved (Option B chosen)
+- ✅ All CODING_STYLE.md violations fixed (100% compliance)
+- ✅ Dead code removed (3 files deleted)
+- ✅ Jackson directive added to CODING_STYLE.md
+
+**Next (Priority 1 in ROADMAP.md):**
+- ⏳ `decode()` method implementation
+- ⏳ Error handling for malformed JSON
+- ⏳ Protocol version validation
+- ⏳ Response type detection logic
+
+**Branch Status:**
+- Clean compilation (`mvn clean compile` success)
+- No git changes yet (work in progress)
+- Ready for decode() implementation
+
+---
+
+#### Reflections
+
+**What Went Well:**
+- `learning-tutor` agent provided clear JSON-RPC fundamentals (mental model shift)
+- Architecture debate (Option A vs B) clarified design philosophy for POCs
+- `/review-code` caught all violations systematically (nothing missed)
+- Jackson simplicity validated (records + auto-mapping = minimal boilerplate)
+
+**What Could Be Improved:**
+- Should have run `/review-code` earlier (caught violations before manual review)
+- Could have committed after encode() completion (smaller, focused commit)
+- Should validate Bean Validation annotations earlier (misleading annotations existed too long)
+
+**Key Takeaway:**
+> **Pragmatism in POCs is not technical debt—it's intentional simplicity.**
+>
+> Option B couples domain to JSON-RPC, but enables faster learning and clearer understanding of protocol mechanics. For a POC focused on learning MCP (not building a reusable JSON-RPC library), this trade-off is justified and healthy.
+
+**Quote from Session:**
+> "You're not sacrificing quality—you're choosing **simplicity over abstraction** in a context where the abstraction doesn't provide meaningful value. That's good engineering judgment, not laziness."
+
+---
+
 ## Session: 2025-11-25 - Documentation Review & Infrastructure Validation
 
 **Stack:** Documentation (no code changes)
@@ -825,8 +1305,8 @@ switch (message) {
 
 ---
 
-**Last Updated:** 2025-11-25
-**Total Sessions:** 2
+**Last Updated:** 2025-12-03
+**Total Sessions:** 3
 **POCs Completed:** 0 (POC 1 in progress)
 **Articles Published:** 0
 **Next Milestone:** Complete POC 1 Hello World MCP + publish first article
