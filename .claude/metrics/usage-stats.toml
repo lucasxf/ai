@@ -4,21 +4,21 @@
 # Analysis period: Project inception to 2025-11-25
 
 [metadata]
-timestamp = "2025-11-30T08:55:00-03:00"
-commit_sha = "be03272cca6090a22c32da59ed82e35331b9d6fc"
+timestamp = "2025-12-08T20:58:00-03:00"
+commit_sha = "ce9da8dad3edd1d07a2cbdb2093162fad15b097e"
 branch = "feature/poc-01-hello-world"
 schema_version = "1.0.0"
 updated_by = "pulse"
 baseline_mode = false
 update_mode = "delta"
-total_commits_analyzed = 12
-commits_with_automations = 5
-analysis_period = "e90bda7..HEAD"
+total_commits_analyzed = 16
+commits_with_automations = 7
+analysis_period = "be03272..HEAD"
 
 [agent_usage.tech-writer]
-invocations = 3
-last_used = "2025-11-30T08:55:00-03:00"
-# Inferred from: LEARNINGS.md updates, ROADMAP.md updates, documentation improvements
+invocations = 4
+last_used = "2025-12-01T19:34:56-03:00"
+# Inferred from: Jackson @JsonProperty directive + CODING_STYLE.md docs (ccd0125)
 
 [agent_usage.automation-sentinel]
 invocations = 1
@@ -26,9 +26,9 @@ last_used = "2025-11-25T19:19:01-03:00"
 # Inferred from: "automation infrastructure finalization"
 
 [agent_usage.backend-code-reviewer]
-invocations = 3
-last_used = "2025-11-30T08:55:00-03:00"
-# Inferred from: domain layer work, AbstractTool pattern, sealed interfaces, DDD architecture
+invocations = 5
+last_used = "2025-12-08T20:51:30-03:00"
+# Inferred from: JsonRpcCodec implementation with Option B architecture, structural inspection patterns (ce9da8d, 17d0fd3)
 
 [agent_usage.session-optimizer]
 invocations = 1
@@ -36,9 +36,9 @@ last_used = "2025-11-25T19:19:01-03:00"
 # Inferred from: "claude init setup", multiple sessions
 
 [agent_usage.pulse]
-invocations = 2
-last_used = "2025-11-30T08:55:00-03:00"
-# Inferred from: 2 explicit pulse invocation mentions in commits
+invocations = 3
+last_used = "2025-12-08T20:58:00-03:00"
+# Inferred from: explicit pulse invocation mentions in commits (b7c2d5f + current delta run)
 
 [agent_usage.flutter-implementation-coach]
 invocations = 0
@@ -109,8 +109,9 @@ invocations = 0
 last_used = null
 
 [command_usage.directive]
-invocations = 0
-last_used = null
+invocations = 1
+last_used = "2025-12-01T19:34:56-03:00"
+# Inferred from: Jackson @JsonProperty directive added to CODING_STYLE.md (ccd0125)
 
 [command_usage.api-doc]
 invocations = 0
@@ -129,11 +130,11 @@ total_locs_added = 28275
 total_locs_deleted = 2454
 net_locs = 25821
 
-# Delta since last checkpoint (2025-11-25)
-delta_locs_added = 5764
-delta_locs_deleted = 37
-delta_net = 5727
-delta_period_days = 5
+# Delta since last checkpoint (2025-12-01)
+delta_locs_added = 1019
+delta_locs_deleted = 158
+delta_net = 861
+delta_period_days = 7
 
 # Averages (based on commits with changes in full history)
 avg_locs_changed_per_commit = 2521
@@ -141,8 +142,9 @@ avg_locs_added_per_commit = 2352
 avg_locs_deleted_per_commit = 204
 
 # Velocity metrics (informational, calculated by automation-sentinel)
-locs_per_day = 1145
-locs_per_session = 0
+locs_per_day = 146
+locs_per_session = 432
+delta_locs_per_day = 146
 
 [health]
 schema_errors = 0
