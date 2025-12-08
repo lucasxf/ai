@@ -287,6 +287,62 @@ public class ReviewServiceImpl implements ReviewService {
 - Facilita navegação no código
 - Entendimento progressivo: vê-se primeiro "o que" a classe faz, depois "como"
 
+### Visibilidade de Campos e Constantes
+
+**Regra:** A menos que sejam usados em várias classes diferentes, campos e constantes em uma determinada classe **não devem** ser declarados como `public`.
+
+**Princípios:**
+1. **Encapsulamento:** Campos e constantes devem ter a menor visibilidade possível
+2. **Single Responsibility:** Se uma constante é usada em múltiplas classes, considere criar uma classe de constantes compartilhadas
+3. **Evitar acoplamento:** Constantes públicas em classes de serviço/repository acoplam clientes desnecessariamente
+
+**Exemplos:**
+
+```java
+// ❌ INCORRETO - Constantes públicas desnecessárias
+@Service
+public class JsonRpcCodecImpl implements JsonRpcCodec {
+    public static final String CODE = "code";      // ❌ Só usado nesta classe
+    public static final String MESSAGE = "message"; // ❌ Só usado nesta classe
+    public static final String DATA = "data";       // ❌ Só usado nesta classe
+
+    private final ObjectMapper mapper;
+    // ...
+}
+
+// ✅ CORRETO - Constantes privadas (uso interno)
+@Service
+public class JsonRpcCodecImpl implements JsonRpcCodec {
+    private static final String CODE = "code";      // ✅ Encapsulada
+    private static final String MESSAGE = "message"; // ✅ Encapsulada
+    private static final String DATA = "data";       // ✅ Encapsulada
+
+    private final ObjectMapper mapper;
+    // ...
+}
+
+// ✅ CORRETO - Constantes compartilhadas em classe dedicada
+public final class JsonRpcErrorCodes {
+    private JsonRpcErrorCodes() {} // Previne instanciação
+
+    public static final int PARSE_ERROR = -32700;       // ✅ Usado em múltiplas classes
+    public static final int INVALID_REQUEST = -32600;   // ✅ Usado em múltiplas classes
+    public static final int METHOD_NOT_FOUND = -32601;  // ✅ Usado em múltiplas classes
+}
+```
+
+**Quando usar `public`:**
+- Constantes de configuração compartilhadas (em classes de constantes dedicadas)
+- Códigos de erro/status usados por múltiplos componentes
+- Enums de domínio usados em várias camadas
+
+**Quando usar `private`:**
+- Constantes usadas apenas internamente na classe
+- Valores de configuração específicos da implementação
+- Strings de validação, mensagens de erro, chaves JSON internas
+
+(Adicionado 2025-12-08)
+
 ### Java Moderno (Java 21)
 
 - ✅ **`var`** para inferência de tipo (quando o tipo é óbvio)

@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public record ToolInvocationRequest(
         String id,
-        String jsonRpc,
+        String jsonrpc,
         String method,
         ToolCallParams params) implements McpRequest {
 
@@ -74,11 +74,9 @@ public record ToolInvocationRequest(
                 throw new InvalidToolParametersException("Invalid tool arguments");
             }
         }
-
         boolean isEmpty() {
             return arguments == null || arguments.isEmpty();
         }
-
     }
 
 }

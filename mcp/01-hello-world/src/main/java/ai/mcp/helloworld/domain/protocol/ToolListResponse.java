@@ -10,7 +10,10 @@ import java.util.List;
  */
 public record ToolListResponse(
         String id,
-        String jsonRpc,
+        String jsonrpc,
         String message,
-        List<Tool> tools) implements McpResponse {
+        ToolListResult result) implements McpResponse {
+
+    record ToolListResult(List<Tool> tools) { }
+
 }

@@ -13,8 +13,7 @@ package ai.mcp.helloworld.domain.protocol;
  * @date 04/11/2025 20:39
  */
 public sealed interface McpResponse extends McpMessage
-        permits ToolInvocationResponse, ToolListResponse {
+        permits McpErrorResponse, ToolInvocationResponse, ToolListResponse {
 
-    record ErrorResponse(int code, String message) { }
 
 }

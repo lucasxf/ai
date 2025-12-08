@@ -20,9 +20,9 @@ import ai.mcp.helloworld.exception.InvalidToolParametersException;
  */
 public record ToolListRequest(
         String id,
-        String jsonRpc,
+        String jsonrpc,
         String method,
-        String[] params) implements McpRequest {
+        Object params) implements McpRequest {
 
     private static final String methodName = "tools/list";
     private static final String JSON_RPC_VERSION = "2.0";
@@ -32,8 +32,8 @@ public record ToolListRequest(
     }
 
     public ToolListRequest {
-        if (!JSON_RPC_VERSION.equals(jsonRpc)) {
-            throw new InvalidToolParametersException("jsonRpc must be \"2.0\"");
+        if (!JSON_RPC_VERSION.equals(jsonrpc)) {
+            throw new InvalidToolParametersException("jsonrpc must be \"2.0\"");
         }
         if (id == null || id.isBlank()) {
             throw new InvalidToolParametersException("Id must not be null or blank");

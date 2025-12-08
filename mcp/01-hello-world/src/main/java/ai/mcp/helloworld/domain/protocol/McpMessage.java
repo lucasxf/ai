@@ -1,5 +1,7 @@
 package ai.mcp.helloworld.domain.protocol;
 
+import java.io.Serializable;
+
 /**
  *
  * Base sealed interface for all MCP protocol messages (JSON-RPC 2.0).
@@ -13,7 +15,7 @@ package ai.mcp.helloworld.domain.protocol;
  * @author lucas
  * @date 04/11/2025 20:37
  */
-public sealed interface McpMessage permits McpRequest, McpResponse {
+public sealed interface McpMessage extends Serializable permits McpRequest, McpResponse {
 
     /**
      * Unique identifier for request-response correlation.
@@ -22,6 +24,6 @@ public sealed interface McpMessage permits McpRequest, McpResponse {
      */
     Object id();
 
-    String jsonRpc();
+    String jsonrpc();
 
 }
