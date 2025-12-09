@@ -330,6 +330,48 @@ final var accountAggregate = AccountAggregate.from(...);
 - ✅ `@Getter` - Getters seletivos (não usar `@Data` indiscriminadamente)
 - ❌ Evitar `@Data` em entidades de domínio (preferir imutabilidade)
 
+### Anotações Jackson (JSON Serialization)
+
+**REGRA:** Evite `@JsonProperty` quando os nomes dos campos Java correspondem exatamente aos campos JSON.
+
+Jackson ObjectMapper faz mapeamento automático quando os nomes coincidem (case-sensitive).
+
+**Quando NÃO usar `@JsonProperty`:**
+
+```java
+// ✅ CORRETO - Sem anotação (nomes coincidem)
+public record Person(String name, long id) {}
+
+// JSON correspondente
+{
+    "name": "Lucas",
+    "id": 123
+}
+```
+
+**Quando USAR `@JsonProperty`:**
+
+```java
+// ✅ CORRETO - Nomes diferentes (snake_case ↔ camelCase)
+public record User(
+    @JsonProperty("user_name") String userName,
+    @JsonProperty("created_at") Instant createdAt
+) {}
+
+// JSON correspondente
+{
+    "user_name": "lucas",
+    "created_at": "2025-12-01T10:00:00Z"
+}
+```
+
+**Outras anotações úteis:**
+- `@JsonInclude(NON_NULL)` - Omite campos nulos na serialização
+- `@JsonIgnore` - Exclui campo da serialização/desserialização
+- `@JsonAlias` - Aceita múltiplos nomes na desserialização
+
+(Added 2025-12-01)
+
 ### Formatação de Classes
 
 **REGRA CRÍTICA - Linha em Branco Antes do Closing Bracket:**

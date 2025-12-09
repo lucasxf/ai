@@ -1,5 +1,9 @@
 package ai.mcp.helloworld.domain.protocol;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import lombok.ToString;
+
 /**
  * Sealed interface for all MCP requests (client → server).
  * <p>
@@ -13,8 +17,8 @@ package ai.mcp.helloworld.domain.protocol;
  * @date 04/11/2025 20:38
  */
 public sealed interface McpRequest extends McpMessage
-        permits ToolInvocationRequest, ToolListRequest {
+                permits ToolInvocationRequest, ToolListRequest {
 
-    String method();
+        String method();
 
 }

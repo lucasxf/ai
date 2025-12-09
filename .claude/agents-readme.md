@@ -123,6 +123,19 @@ ls .claude/agents/
 - Learning Spring Boot/MCP best practices
 - Improving code quality
 
+**🤖 Auto-Trigger Protocol (for Claude):**
+
+**CRITICAL:** ALWAYS invoke this agent (never manual review) when user:
+- Says "review" + backend file path (e.g., "review JsonRpcCodecImpl.java")
+- Says "check/validate/analyze" + Java/Spring Boot code
+- Says "I just finished implementing [Service|Controller|Repository|...]"
+- Says "before committing..." or "I'm about to commit..."
+- Provides code with request for feedback
+
+**Why:** Agent's 10-dimension systematic review is always superior to ad-hoc manual review.
+
+**Exception:** Only skip agent if user explicitly says "quick check" or "sanity check".
+
 **Example prompts:**
 - "Review my McpClientService implementation"
 - "Check this MCP server for best practices"
@@ -153,6 +166,20 @@ ls .claude/agents/
 - Getting structured lessons
 - Practicing with exercises
 - Reviewing fundamentals
+
+**🤖 Auto-Trigger Protocol (for Claude):**
+
+**CRITICAL:** ALWAYS invoke this agent when user:
+- Says "teach me" + topic (e.g., "teach me JSON-RPC 2.0")
+- Says "explain" + concept (e.g., "explain MCP protocol")
+- Says "I want to understand" + topic
+- Says "how does [concept] work?"
+- Says "what's the difference between X and Y?"
+- Asks conceptual questions (not implementation-specific)
+
+**Why:** Agent provides structured lessons with exercises, not just explanations.
+
+**Exception:** Skip for simple factual questions ("what is the HTTP status code for...").
 
 **Example prompts:**
 - "Teach me Model Context Protocol fundamentals"
@@ -252,6 +279,19 @@ Total: ~3800 tokens (vs 15,000 without pulse)
 - Creating ADRs (Architecture Decision Records)
 - Updating ROADMAP.md or LEARNINGS.md
 - Writing README sections
+
+**🤖 Auto-Trigger Protocol (for Claude):**
+
+**CRITICAL:** ALWAYS invoke this agent when user:
+- Says "add OpenAPI annotations" + controller/endpoint name
+- Says "create ADR for" + decision/topic
+- Says "add Javadoc to" + class name
+- Says "update LEARNINGS.md" or "update ROADMAP.md"
+- Says "document this endpoint/class/method"
+
+**Why:** Agent enforces complete documentation standards (all HTTP codes, @author tags, etc.).
+
+**Note:** backend-code-reviewer may trigger this agent if OpenAPI docs are missing.
 
 **Example prompts:**
 - "Add OpenAPI annotations to McpToolController"
