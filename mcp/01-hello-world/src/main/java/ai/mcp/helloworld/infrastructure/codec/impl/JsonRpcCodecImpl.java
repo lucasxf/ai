@@ -84,14 +84,14 @@ public class JsonRpcCodecImpl implements JsonRpcCodec {
     }
 
     private void validateJsonMessage(JsonNode node) {
-        if (!node.has(JSONRPC)) {
-            throw new CodecException("Missing required field: 'jsonrpc'");
+        if (!node.has(JSONRPC) || node.get(JSONRPC).isNull()) {
+            throw new CodecException("Missing required field or value: 'jsonrpc'");
         }
-        final var version = node.get(JSONRPC).asText();
-        if (!JSONRPC_VERSION.equals(version)) {
-            throw new CodecException(STR."Invalid JSON-RPC version: \{version}");
+        final JsonNode versionNode = node.get(JSONRPC);
+        if (!JSONRPC_VERSION.equals(versionNode.asText())) {
+            throw new CodecException("Invalid JSON-RPC version");
         }
-        if (!node.has(ID)) {
+        if (!node.has(ID) || node.get(ID).isNull()) {
             throw new CodecException("Missing required field: 'id'");
         }
         if (node.get(ID) == null) {
@@ -100,8 +100,11 @@ public class JsonRpcCodecImpl implements JsonRpcCodec {
     }
 
     private McpRequest decodeRequest(JsonNode node) throws JsonProcessingException {
-        final var method = node.get(METHOD).asText();
-
+        final JsonNode methodNode = node.get(METHOD);
+        if  (methodNode == null) {
+            throw new CodecException("Missing method field value");
+        }
+        final var method = methodNode.asText();
         return switch (method) {
             case TOOLS_LIST -> mapper.treeToValue(node, ToolListRequest.class);
             case TOOLS_CALL -> mapper.treeToValue(node, ToolInvocationRequest.class);
