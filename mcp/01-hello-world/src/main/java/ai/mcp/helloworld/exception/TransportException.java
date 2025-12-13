@@ -12,6 +12,10 @@ public class TransportException extends McpException {
         super(message);
     }
 
+    public TransportException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     @Override
     public HttpStatus getHttpStatus() {
         return HttpStatus.INTERNAL_SERVER_ERROR;

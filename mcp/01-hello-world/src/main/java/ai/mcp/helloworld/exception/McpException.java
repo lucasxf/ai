@@ -12,6 +12,10 @@ public abstract class McpException extends RuntimeException {
         super(message);
     }
 
+    public McpException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     public abstract HttpStatus getHttpStatus();
 
 }
