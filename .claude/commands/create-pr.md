@@ -32,26 +32,57 @@ fi
 echo "Current branch: $CURRENT_BRANCH"
 ```
 
-## 2. Determine Base Branch
+## 2. Determine Base Branch (Auto-Detection for MCP Features)
 
-**Check which base branch to target:**
+**Smart base branch detection:**
 ```bash
-# Default to 'develop' if it exists locally or remotely, otherwise 'main'
+# Step 1: Detect if this is an MCP feature (files under /mcp directory)
+# Check for 'main' or 'develop' as potential base first
 if git show-ref --verify --quiet refs/heads/develop; then
-  BASE_BRANCH="develop"
+  POTENTIAL_BASE="develop"
 elif git show-ref --verify --quiet refs/remotes/origin/develop; then
-  BASE_BRANCH="develop"
+  POTENTIAL_BASE="develop"
 else
-  BASE_BRANCH="main"
+  POTENTIAL_BASE="main"
 fi
 
-echo "Base branch: $BASE_BRANCH"
+# Step 2: Check if any changed files are under mcp/ directory
+MCP_FILES=$(git diff $POTENTIAL_BASE..HEAD --name-only | grep '^mcp/' | wc -l)
+
+# Step 3: Auto-detect base branch based on file location
+if [[ "$MCP_FILES" -gt 0 ]]; then
+  # MCP feature detected → target develop-mcp
+  if git show-ref --verify --quiet refs/heads/develop-mcp; then
+    BASE_BRANCH="develop-mcp"
+  elif git show-ref --verify --quiet refs/remotes/origin/develop-mcp; then
+    BASE_BRANCH="develop-mcp"
+  else
+    echo "⚠️ WARNING: MCP files detected but develop-mcp branch doesn't exist"
+    echo "Creating develop-mcp from develop..."
+    git checkout -b develop-mcp origin/develop
+    git checkout $CURRENT_BRANCH
+    BASE_BRANCH="develop-mcp"
+  fi
+  echo "🔍 Auto-detected: MCP feature ($MCP_FILES files under mcp/)"
+  echo "Base branch: $BASE_BRANCH (MCP isolation branch)"
+else
+  # Non-MCP feature → target develop or main
+  BASE_BRANCH="$POTENTIAL_BASE"
+  echo "Base branch: $BASE_BRANCH (standard development branch)"
+fi
 ```
 
 **Prompt user for confirmation:**
 "Target base branch is `$BASE_BRANCH`. Is this correct? (y/n)"
 
 If NO → Ask user: "Which base branch should this PR target?"
+
+**Auto-Detection Rules (from CLAUDE.md):**
+- **MCP Features** (files under `/mcp` directory): MUST target `develop-mcp`
+- **Non-MCP Features** (other directories): Target `develop`
+- **Rationale**: Isolates experimental MCP work, allows parallel POCs, merges to develop only after validation
+
+(Updated 2025-12-13)
 
 ## 3. Check for Uncommitted Changes (Soft Warning)
 

@@ -122,6 +122,19 @@ main                     # Stable releases
 - `develop-mcp` → `develop` (after POC validation)
 - `develop` → `main` (after article publication)
 
+**Branch Targeting Rules (Auto-Detection):**
+- **MCP Features** (files under `/mcp` directory): MUST target `develop-mcp`
+- **Non-MCP Features** (other directories): Target `develop`
+- **Auto-detection in `/create-pr`**: Check `git diff [base]..HEAD --name-only` for `mcp/` prefix
+
+**Rationale:**
+- **Isolation**: Separates experimental MCP work from main development stream
+- **Parallel POCs**: Allows multiple MCP studies in progress simultaneously
+- **Quality Gate**: Only validated POCs merge to `develop` (after protocol validation)
+- **Clean History**: Main development (`develop`) stays stable while MCP experiments iterate
+
+(Updated 2025-12-13)
+
 ---
 
 ## Available Commands (Copied from wine-reviewer)

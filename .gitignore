@@ -1,0 +1,41 @@
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# Gradle
+.gradle/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local settings
+.claude/settings.local.json
+
+# Temp files
+*.log
+*.tmp
+*.swp
+*.bak
+*.class
+*.jar
+*.war
+*.ear
+
+# Archives (optional - comment out if you want to commit zips)
+*.zip
+*.tar.gz
+*.rar
