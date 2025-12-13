@@ -114,6 +114,9 @@ public class JsonRpcCodecImpl implements JsonRpcCodec {
 
     private McpResponse decodeResponse(JsonNode node) throws JsonProcessingException {
         var resultNode = node.get(RESULT);
+        if  (resultNode == null || resultNode.isNull()) {
+            throw new CodecException("Missing required field: 'result'");
+        }
         if (resultNode.has(TOOLS)) {
             return mapper.treeToValue(node, ToolListResponse.class);
         } else if (resultNode.has(CONTENT)) {

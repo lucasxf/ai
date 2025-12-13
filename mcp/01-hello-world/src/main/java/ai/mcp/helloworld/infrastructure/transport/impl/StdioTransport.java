@@ -55,6 +55,8 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class StdioTransport implements Transport {
 
+    private static final int SHUTDOWN_TIMEOUT_SECONDS = 5;
+
     private final Process process;
     private final BufferedWriter writer;
     private final BufferedReader reader;
@@ -163,7 +165,7 @@ public class StdioTransport implements Transport {
                 log.info("Closing MCP server process");
                 process.destroy();
 
-                boolean exited = process.waitFor(5, TimeUnit.SECONDS);
+                boolean exited = process.waitFor(SHUTDOWN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
                 if (!exited) {
                     log.warn("MCP server hasn't shutdown gracefully, forcing termination");
                     process.destroyForcibly();
