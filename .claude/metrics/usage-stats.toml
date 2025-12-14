@@ -4,19 +4,21 @@
 # Analysis period: Project inception to 2025-11-25
 
 [metadata]
-timestamp = "2025-11-25T19:19:01-03:00"
-commit_sha = "e90bda761a2984070840d5d143bc3f25703bcbea"
-branch = "feature/update-automation-from-wine-reviewer"
+timestamp = "2025-12-13T06:51:00-03:00"
+commit_sha = "b98492e636483cfb8718c297f15345ebc259848b"
+branch = "feature/poc-01-hello-world"
 schema_version = "1.0.0"
 updated_by = "pulse"
-baseline_mode = true
-total_commits_analyzed = 18
-commits_with_automations = 8
+baseline_mode = false
+update_mode = "delta"
+total_commits_analyzed = 23
+commits_with_automations = 10
+analysis_period = "ce9da8d..HEAD"
 
 [agent_usage.tech-writer]
-invocations = 2
-last_used = "2025-11-25T19:19:01-03:00"
-# Inferred from: docs commits, "added prompts", "documentation review" mentions
+invocations = 5
+last_used = "2025-12-06T11:08:06-03:00"
+# Inferred from: Jackson @JsonProperty directive + CODING_STYLE.md docs (ccd0125), auto-trigger protocol documentation (fe22854)
 
 [agent_usage.automation-sentinel]
 invocations = 1
@@ -24,9 +26,9 @@ last_used = "2025-11-25T19:19:01-03:00"
 # Inferred from: "automation infrastructure finalization"
 
 [agent_usage.backend-code-reviewer]
-invocations = 1
-last_used = "2025-11-25T19:19:01-03:00"
-# Inferred from: setup, MCP protocol work, refactors
+invocations = 6
+last_used = "2025-12-13T06:50:27-03:00"
+# Inferred from: JsonRpcCodec implementation with Option B architecture (ce9da8d), Virtual Thread transport layer with exception handling architecture decisions (b98492e)
 
 [agent_usage.session-optimizer]
 invocations = 1
@@ -34,8 +36,9 @@ last_used = "2025-11-25T19:19:01-03:00"
 # Inferred from: "claude init setup", multiple sessions
 
 [agent_usage.pulse]
-invocations = 0
-last_used = null
+invocations = 4
+last_used = "2025-12-13T06:51:00-03:00"
+# Inferred from: explicit pulse invocation mentions in commits (4cfe304 + current delta run)
 
 [agent_usage.flutter-implementation-coach]
 invocations = 0
@@ -54,9 +57,9 @@ invocations = 0
 last_used = null
 
 [command_usage.start-session]
-invocations = 3
-last_used = "2025-11-25T19:19:01-03:00"
-# Inferred from: multiple feature branches, init, claude setup
+invocations = 4
+last_used = "2025-11-30T08:55:00-03:00"
+# Inferred from: feature/poc-01-hello-world branch work, ongoing development
 
 [command_usage.finish-session]
 invocations = 1
@@ -64,18 +67,18 @@ last_used = "2025-11-25T19:19:01-03:00"
 # Inferred from: "complete documentation review"
 
 [command_usage.create-pr]
-invocations = 3
-last_used = "2025-11-25T19:19:01-03:00"
-# Direct count: 3 merged PRs in git log (#1, #2, #3)
+invocations = 4
+last_used = "2025-11-30T08:55:00-03:00"
+# Direct count: 4 merged PRs in git log (includes #7, #6, #4)
 
 [command_usage.update-roadmap]
 invocations = 0
 last_used = null
 
 [command_usage.review-code]
-invocations = 1
-last_used = "2025-11-25T19:19:01-03:00"
-# Inferred from: "code review workflow" commit
+invocations = 2
+last_used = "2025-11-30T08:55:00-03:00"
+# Inferred from: domain layer review, architecture validation for domain layer work
 
 [command_usage.quick-test]
 invocations = 0
@@ -106,34 +109,42 @@ invocations = 0
 last_used = null
 
 [command_usage.directive]
-invocations = 0
-last_used = null
+invocations = 1
+last_used = "2025-12-01T19:34:56-03:00"
+# Inferred from: Jackson @JsonProperty directive added to CODING_STYLE.md (ccd0125)
 
 [command_usage.api-doc]
 invocations = 0
 last_used = null
 
 [productivity]
-# Current codebase snapshot
+# Current codebase snapshot (as of HEAD b98492e)
 # Note: Java code is in MCP POCs, not typical service structure
-current_total_locs = 0
-current_production_locs = 0
-current_test_locs = 0
-test_ratio_percent = 0.0
+current_total_locs = 1398
+current_production_locs = 1264
+current_test_locs = 134
+test_ratio_percent = 10.6
 
-# Period metrics (full project history)
-total_locs_added = 22511
-total_locs_deleted = 2417
-net_locs = 20094
+# Period metrics (consolidated: full project history)
+total_locs_added = 28692
+total_locs_deleted = 2498
+net_locs = 26194
 
-# Averages (based on 11 commits with changes in full history)
-avg_locs_changed_per_commit = 2257
-avg_locs_added_per_commit = 2046
-avg_locs_deleted_per_commit = 220
+# Delta since last checkpoint (2025-12-08 20:57)
+delta_locs_added = 417
+delta_locs_deleted = 44
+delta_net = 373
+delta_period_days = 5
+
+# Averages (based on commits with changes in full history)
+avg_locs_changed_per_commit = 2508
+avg_locs_added_per_commit = 2358
+avg_locs_deleted_per_commit = 205
 
 # Velocity metrics (informational, calculated by automation-sentinel)
-locs_per_day = 0
-locs_per_session = 0
+locs_per_day = 155
+locs_per_session = 437
+delta_locs_per_day = 83
 
 [health]
 schema_errors = 0

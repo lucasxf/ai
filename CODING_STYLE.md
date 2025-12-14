@@ -287,6 +287,62 @@ public class ReviewServiceImpl implements ReviewService {
 - Facilita navegação no código
 - Entendimento progressivo: vê-se primeiro "o que" a classe faz, depois "como"
 
+### Visibilidade de Campos e Constantes
+
+**Regra:** A menos que sejam usados em várias classes diferentes, campos e constantes em uma determinada classe **não devem** ser declarados como `public`.
+
+**Princípios:**
+1. **Encapsulamento:** Campos e constantes devem ter a menor visibilidade possível
+2. **Single Responsibility:** Se uma constante é usada em múltiplas classes, considere criar uma classe de constantes compartilhadas
+3. **Evitar acoplamento:** Constantes públicas em classes de serviço/repository acoplam clientes desnecessariamente
+
+**Exemplos:**
+
+```java
+// ❌ INCORRETO - Constantes públicas desnecessárias
+@Service
+public class JsonRpcCodecImpl implements JsonRpcCodec {
+    public static final String CODE = "code";      // ❌ Só usado nesta classe
+    public static final String MESSAGE = "message"; // ❌ Só usado nesta classe
+    public static final String DATA = "data";       // ❌ Só usado nesta classe
+
+    private final ObjectMapper mapper;
+    // ...
+}
+
+// ✅ CORRETO - Constantes privadas (uso interno)
+@Service
+public class JsonRpcCodecImpl implements JsonRpcCodec {
+    private static final String CODE = "code";      // ✅ Encapsulada
+    private static final String MESSAGE = "message"; // ✅ Encapsulada
+    private static final String DATA = "data";       // ✅ Encapsulada
+
+    private final ObjectMapper mapper;
+    // ...
+}
+
+// ✅ CORRETO - Constantes compartilhadas em classe dedicada
+public final class JsonRpcErrorCodes {
+    private JsonRpcErrorCodes() {} // Previne instanciação
+
+    public static final int PARSE_ERROR = -32700;       // ✅ Usado em múltiplas classes
+    public static final int INVALID_REQUEST = -32600;   // ✅ Usado em múltiplas classes
+    public static final int METHOD_NOT_FOUND = -32601;  // ✅ Usado em múltiplas classes
+}
+```
+
+**Quando usar `public`:**
+- Constantes de configuração compartilhadas (em classes de constantes dedicadas)
+- Códigos de erro/status usados por múltiplos componentes
+- Enums de domínio usados em várias camadas
+
+**Quando usar `private`:**
+- Constantes usadas apenas internamente na classe
+- Valores de configuração específicos da implementação
+- Strings de validação, mensagens de erro, chaves JSON internas
+
+(Adicionado 2025-12-08)
+
 ### Java Moderno (Java 21)
 
 - ✅ **`var`** para inferência de tipo (quando o tipo é óbvio)
@@ -329,6 +385,48 @@ final var accountAggregate = AccountAggregate.from(...);
 - ✅ `@Slf4j` - Logging automático
 - ✅ `@Getter` - Getters seletivos (não usar `@Data` indiscriminadamente)
 - ❌ Evitar `@Data` em entidades de domínio (preferir imutabilidade)
+
+### Anotações Jackson (JSON Serialization)
+
+**REGRA:** Evite `@JsonProperty` quando os nomes dos campos Java correspondem exatamente aos campos JSON.
+
+Jackson ObjectMapper faz mapeamento automático quando os nomes coincidem (case-sensitive).
+
+**Quando NÃO usar `@JsonProperty`:**
+
+```java
+// ✅ CORRETO - Sem anotação (nomes coincidem)
+public record Person(String name, long id) {}
+
+// JSON correspondente
+{
+    "name": "Lucas",
+    "id": 123
+}
+```
+
+**Quando USAR `@JsonProperty`:**
+
+```java
+// ✅ CORRETO - Nomes diferentes (snake_case ↔ camelCase)
+public record User(
+    @JsonProperty("user_name") String userName,
+    @JsonProperty("created_at") Instant createdAt
+) {}
+
+// JSON correspondente
+{
+    "user_name": "lucas",
+    "created_at": "2025-12-01T10:00:00Z"
+}
+```
+
+**Outras anotações úteis:**
+- `@JsonInclude(NON_NULL)` - Omite campos nulos na serialização
+- `@JsonIgnore` - Exclui campo da serialização/desserialização
+- `@JsonAlias` - Aceita múltiplos nomes na desserialização
+
+(Added 2025-12-01)
 
 ### Formatação de Classes
 
