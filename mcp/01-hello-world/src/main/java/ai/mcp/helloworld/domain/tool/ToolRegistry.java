@@ -2,6 +2,7 @@ package ai.mcp.helloworld.domain.tool;
 
 import ai.mcp.helloworld.exception.InvalidToolParametersException;
 import ai.mcp.helloworld.exception.ToolNotFoundException;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.Map;
  * @author lucas
  * @date 04/11/2025 20:50
  */
+@Component
 public class ToolRegistry {
 
     private static final Map<String, Tool> REGISTRY = new HashMap<>();

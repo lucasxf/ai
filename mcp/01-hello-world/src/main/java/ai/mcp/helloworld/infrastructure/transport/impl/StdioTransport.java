@@ -3,6 +3,7 @@ package ai.mcp.helloworld.infrastructure.transport.impl;
 import ai.mcp.helloworld.exception.TransportException;
 import ai.mcp.helloworld.infrastructure.transport.Transport;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -53,6 +54,7 @@ import java.util.concurrent.TimeUnit;
  * @see ProcessBuilder
  */
 @Slf4j
+@Component
 public class StdioTransport implements Transport {
 
     private static final int SHUTDOWN_TIMEOUT_SECONDS = 5;

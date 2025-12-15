@@ -6,7 +6,7 @@ import ai.mcp.helloworld.infrastructure.codec.JsonRpcCodec;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.List;
  * @author lucas
  * @date 01/12/2025 18:41
  */
-@Service
+@Component
 public class JsonRpcCodecImpl implements JsonRpcCodec {
 
     // JSON-RPC 2.0
@@ -101,7 +101,7 @@ public class JsonRpcCodecImpl implements JsonRpcCodec {
 
     private McpRequest decodeRequest(JsonNode node) throws JsonProcessingException {
         final JsonNode methodNode = node.get(METHOD);
-        if  (methodNode == null) {
+        if (methodNode == null) {
             throw new CodecException("Missing method field value");
         }
         final var method = methodNode.asText();
@@ -114,7 +114,7 @@ public class JsonRpcCodecImpl implements JsonRpcCodec {
 
     private McpResponse decodeResponse(JsonNode node) throws JsonProcessingException {
         var resultNode = node.get(RESULT);
-        if  (resultNode == null || resultNode.isNull()) {
+        if (resultNode == null || resultNode.isNull()) {
             throw new CodecException("Missing required field: 'result'");
         }
         if (resultNode.has(TOOLS)) {
