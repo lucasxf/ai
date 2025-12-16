@@ -2,6 +2,8 @@ package ai.mcp.helloworld.domain.protocol;
 
 import ai.mcp.helloworld.exception.InvalidToolParametersException;
 
+import java.util.Map;
+
 /**
  * Request to list all available MCP tools.
  * <p>
@@ -22,7 +24,7 @@ public record ToolListRequest(
         String id,
         String jsonrpc,
         String method,
-        Object params) implements McpRequest {
+        Map<String, Object> params) implements McpRequest {
 
     private static final String methodName = "tools/list";
     private static final String JSON_RPC_VERSION = "2.0";

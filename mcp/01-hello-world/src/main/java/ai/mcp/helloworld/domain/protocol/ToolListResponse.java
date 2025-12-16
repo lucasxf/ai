@@ -14,6 +14,6 @@ public record ToolListResponse(
         String message,
         ToolListResult result) implements McpResponse {
 
-    record ToolListResult(List<Tool> tools) { }
+    public record ToolListResult(List<Tool> tools) { }
 
 }

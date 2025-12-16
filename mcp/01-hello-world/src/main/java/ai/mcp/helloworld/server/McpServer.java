@@ -1,4 +1,4 @@
-package ai.mcp.helloworld.application.server;
+package ai.mcp.helloworld.server;
 
 import ai.mcp.helloworld.domain.protocol.McpRequest;
 

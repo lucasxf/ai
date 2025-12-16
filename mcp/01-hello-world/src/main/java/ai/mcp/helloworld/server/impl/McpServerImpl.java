@@ -1,6 +1,6 @@
-package ai.mcp.helloworld.application.server.impl;
+package ai.mcp.helloworld.server.impl;
 
-import ai.mcp.helloworld.application.server.McpServer;
+import ai.mcp.helloworld.server.McpServer;
 import ai.mcp.helloworld.domain.protocol.McpMessage;
 import ai.mcp.helloworld.domain.protocol.McpRequest;
 import ai.mcp.helloworld.domain.tool.ToolRegistry;

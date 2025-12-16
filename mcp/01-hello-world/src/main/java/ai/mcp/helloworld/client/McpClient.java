@@ -1,4 +1,4 @@
-package ai.mcp.helloworld.application.client;
+package ai.mcp.helloworld.client;
 
 /**
  * @author lucas

@@ -4,8 +4,7 @@ import ai.mcp.helloworld.exception.InvalidToolParametersException;
 import ai.mcp.helloworld.exception.ToolNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author lucas
@@ -22,6 +21,10 @@ public class ToolRegistry {
             throw new ToolNotFoundException("Tool not found: " + name);
         }
         return tool;
+    }
+
+    public static List<Tool> getAllTools() {
+        return new ArrayList<>(REGISTRY.values());
     }
 
     public static void register(String name, Tool tool) {
