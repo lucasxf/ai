@@ -1,8 +1,8 @@
 # AI/MCP Studies Roadmap
 
-**Last Updated:** 2025-12-08
+**Last Updated:** 2025-12-16
 **Current Branch:** feature/poc-01-hello-world
-**Project Status:** MCP POC 1 - Domain layer complete ✅, JsonRpcCodec complete ✅, StdioTransport next 🚧
+**Project Status:** MCP POC 1 - ServerStdioTransport ✅, ServerMessageHandler ✅, Application layer next 🚧
 
 ---
 
@@ -108,7 +108,43 @@ Master Model Context Protocol (MCP) through structured POCs while maintaining pr
 
 **Progress:**
 - Infrastructure layer codec: 100% COMPLETE ✅
-- Infrastructure layer transport: 0% (next priority)
+- Infrastructure layer transport: 100% COMPLETE ✅
+
+### ✅ Completed: MCP POC 1 - Infrastructure Layer - ServerStdioTransport (2025-12-16)
+
+**ServerStdioTransport Implementation (server.impl/)** 
+- ✅ Server-side stdio transport implemented (reads from stdin, writes to stdout)
+- ✅ Newline-delimited JSON message handling
+- ✅ Request validation (null checks, JSON-RPC version validation, ID validation)
+- ✅ Integration with JsonRpcCodec
+- ✅ Error handling for I/O failures (via TransportException)
+- ✅ Comprehensive Javadoc documentation
+
+**What's Done:**
+- ✅ Read JSON-RPC requests from stdin
+- ✅ Write JSON-RPC responses to stdout
+- ✅ Request ID validation (String or Number only)
+- ✅ JSON-RPC 2.0 version validation
+- ✅ Thread-safe BufferedReader/PrintWriter usage
+
+### ✅ Completed: MCP POC 1 - Application Layer - ServerMessageHandler (2025-12-16)
+
+**ServerMessageHandler Implementation (server/)**
+- ✅ Handles tools/list requests (returns available tools from ToolRegistry)
+- ✅ Handles tools/call requests (invokes tools and returns results)
+- ✅ Request validation (null checks, ID validation, method validation)
+- ✅ Error handling with proper JSON-RPC error codes
+- ✅ Type-safe request handling with pattern matching (instanceof)
+- ✅ Comprehensive Javadoc with @param, @return, @throws
+- ⚠️ Error codes currently positive (should be negative per JSON-RPC spec - pending fix)
+
+**What's Done:**
+- ✅ tools/list request handling
+- ✅ tools/call request handling with parameter extraction
+- ✅ Request validation (null ID, invalid method, missing parameters)
+- ✅ JSON-RPC error response mapping (InvalidToolParametersException → -32602)
+- ✅ Pattern matching for type-safe McpRequest casting
+- ✅ Comprehensive Javadoc (public methods only, per new directive)
 
 ---
 
@@ -118,7 +154,7 @@ Master Model Context Protocol (MCP) through structured POCs while maintaining pr
 
 **Goal:** Understand MCP protocol basics
 
-**Status:** Domain layer complete ✅, JsonRpcCodec complete ✅, StdioTransport next 🚧
+**Status:** Domain layer complete ✅, JsonRpcCodec complete ✅, ServerStdioTransport complete ✅, ServerMessageHandler complete ✅, McpServerApplication next 🚧
 
 **What's Done:**
 - ✅ Project structure created (mcp/01-hello-world/)
@@ -134,19 +170,30 @@ Master Model Context Protocol (MCP) through structured POCs while maintaining pr
 - ✅ Option B architecture validated (domain-level validation with jsonRpc field)
 - ✅ Dead code removed (JsonRpcEnvelope, JsonRpcRequestEnvelope, unused validation)
 - ✅ 100% CODING_STYLE.md compliance achieved
+- ✅ ServerStdioTransport implemented (server-side stdio transport with validation)
+- ✅ ServerMessageHandler implemented (tools/list and tools/call request handling)
+- ✅ Request validation (null checks, ID validation, JSON-RPC version)
+- ✅ JSON-RPC error response mapping with proper error codes
+- ✅ Pattern matching for type-safe request handling
+- ✅ Javadoc directive added to CODING_STYLE.md (public methods only, not private)
 
 **What's Next:**
-1. Infrastructure layer - StdioTransport implementation (CURRENT)
-2. Application layer (McpClient, McpServer)
+
+1. Application layer - McpServerApplication implementation (CURRENT)
+2. Application layer - McpClientDemo implementation
 3. Integration testing (deferred until after exploration)
 4. Documentation (POC README.md + LEARNINGS.md update)
 
-**Current Focus:** StdioTransport implementation (stdin/stdout communication)
+**Current Focus:** McpServerApplication main entry point (server startup and lifecycle)
+
+
+
+
 
 **Deliverables (Updated):**
 - ✅ Domain layer with Java 21 features
-- 🚧 Infrastructure layer (codec: ✅ COMPLETE | transport: 🚧 IN PROGRESS)
-- ⏳ Application layer (client + server)
+- ✅ Infrastructure layer (codec: ✅ COMPLETE | transport: ✅ COMPLETE)
+- 🚧 Application layer (ServerMessageHandler: ✅ | McpServerApplication: 🚧 IN PROGRESS | client: ⏳)
 - ⏳ Integration testing (deferred for exploration)
 - ⏳ POC documentation
 - ⏳ Technical article draft
