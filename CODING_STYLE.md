@@ -735,10 +735,14 @@ public class ReviewController {
 ### Javadoc
 
 - **Obrigatório** para classes públicas e interfaces
-- Incluir `@author` e `@date`
+- **Obrigatório** para métodos públicos (incluir `@param`, `@return`, `@throws` quando aplicável)
+- **Não necessário** para métodos privados (código deve ser autoexplicativo)
+- Incluir `@author` e `@date` em classes
 - Descrição concisa em português
 
-**Exemplo:**
+**(Atualizado 2025-12-16: Regra de métodos privados)**
+
+**Exemplo - Classe:**
 ```java
 /**
  * Controller para gerenciamento de contas de usuário.
@@ -749,6 +753,20 @@ public class ReviewController {
 @RestController
 public class AccountController {
 
+}
+```
+
+**Exemplo - Método Público:**
+```java
+/**
+ * Cria uma nova conta de usuário.
+ *
+ * @param command dados da conta a ser criada
+ * @return a conta criada com ID gerado
+ * @throws InvalidAccountException se os dados forem inválidos
+ */
+public Account createAccount(CreateAccountCommand command) {
+    // ...
 }
 ```
 
