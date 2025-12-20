@@ -797,11 +797,22 @@ public Account createAccount(CreateAccountCommand command) {
 - Incluir contexto relevante (IDs, usernames, etc.)
 - Níveis apropriados: INFO para fluxo, DEBUG para detalhes, ERROR para exceções
 
+**Onde aplicar logging:**
+- ✅ **Service layer** - Business logic, orchestration (CreateAccountHandler, ReviewService)
+- ✅ **Controllers** - REST endpoints entrada/saída (ReviewController, AuthController)
+- ✅ **Infrastructure layer** - Transport, codec, external I/O (ServerStdioTransport, JsonRpcCodec)
+- ✅ **Application layer** - Client/server implementations (McpServerImpl, McpClientImpl)
+- ❌ **Domain POJOs** - Records, entities, value objects (apenas lógica de domínio, sem side effects)
+- ❌ **Configuration classes** - @ConfigurationProperties (apenas dados de config)
+- ❌ **DTOs** - Request/Response records (apenas transferência de dados)
+
 **Exemplo:**
 ```java
 log.info("Handling CreateAccount command for username: {}", command.username());
 log.info("Account {} created successfully for username: {}", accountId, command.username());
 ```
+
+(Updated 2025-12-20: Added guidance on where to apply logging)
 
 ## 📦 Maven / Gerenciamento de Dependências
 
