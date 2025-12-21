@@ -60,6 +60,7 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                    <jvmArguments>--enable-preview</jvmArguments>
                 </configuration>
             </plugin>
             <!-- Surefire: runs *Test.java during 'mvn test' -->
@@ -70,6 +71,7 @@
                     <excludes>
                         <exclude>**/*IT.java</exclude>
                     </excludes>
+                    <argLine>--enable-preview</argLine>
                 </configuration>
             </plugin>
 
@@ -77,6 +79,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <argLine>--enable-preview</argLine>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>

@@ -47,12 +47,12 @@ public class JsonRpcCodecImpl implements JsonRpcCodec {
     }
 
     @Override
-    public String encode(McpRequest request) {
+    public String encode(McpMessage message) {
         try {
-            return mapper.writeValueAsString(request);
+            return mapper.writeValueAsString(message);
         } catch (JsonProcessingException e) {
-            final var message = getSerializationExceptionMessage(request);
-            throw new CodecException(message, e);
+            final var exceptionMessage = getSerializationExceptionMessage(message);
+            throw new CodecException(exceptionMessage, e);
         }
     }
 
@@ -167,8 +167,8 @@ public class JsonRpcCodecImpl implements JsonRpcCodec {
         }
     }
 
-    private String getSerializationExceptionMessage(McpRequest request) {
-        return STR."Can't serialize request { id=\{request.id()}, method=\{request.method()} to json}";
+    private String getSerializationExceptionMessage(McpMessage mcpMessage) {
+        return STR."Can't serialize message { id=\{mcpMessage.id()} to json}";
     }
 
     private String getDeserializationExceptionMessage(String json) {

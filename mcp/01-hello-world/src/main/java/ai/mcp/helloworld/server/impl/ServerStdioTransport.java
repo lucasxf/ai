@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
  * @author Lucas Xavier Ferreira
  * @date 16/12/2025
  */
-@Component
+@Component("serverStdioTransport")
 public class ServerStdioTransport implements Transport {
 
     private final BufferedReader reader;

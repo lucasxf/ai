@@ -1,8 +1,8 @@
 # AI/MCP Studies Roadmap
 
-**Last Updated:** 2025-12-16
+**Last Updated:** 2025-12-20
 **Current Branch:** feature/poc-01-hello-world
-**Project Status:** MCP POC 1 - ServerStdioTransport ✅, ServerMessageHandler ✅, Application layer next 🚧
+**Project Status:** MCP POC 1 - Server layer COMPLETE ✅, Client layer next 🚧
 
 ---
 
@@ -146,6 +146,37 @@ Master Model Context Protocol (MCP) through structured POCs while maintaining pr
 - ✅ Pattern matching for type-safe McpRequest casting
 - ✅ Comprehensive Javadoc (public methods only, per new directive)
 
+### ✅ Completed: MCP POC 1 - Application Layer - Spring Boot Server Integration (2025-12-20)
+
+**McpServerApplication Implementation (server/)**
+- ✅ Spring Boot CommandLineRunner integration
+- ✅ Tool registration system with @PostConstruct (ToolRegistryConfig)
+- ✅ Automatic tool discovery and registration (AddTool, MultiplyTool, RandomTool)
+- ✅ Server main loop with graceful error handling
+- ✅ TransportException and CodecException handling
+- ✅ @PreDestroy lifecycle hook for resource cleanup
+- ✅ Java preview features runtime configuration (--enable-preview in pom.xml)
+
+**What's Done:**
+- ✅ Spring Boot application main entry point
+- ✅ Dependency injection wiring (ServerStdioTransport, ServerMessageHandler, ToolRegistry)
+- ✅ Tool registration via @PostConstruct (CRITICAL FIX - tools were not being registered)
+- ✅ Server main loop (read request → handle → write response)
+- ✅ Error handling with proper logging (TransportException, CodecException)
+- ✅ Graceful shutdown with @PreDestroy
+- ✅ Fixed Java preview features for runtime (STR string templates require --enable-preview)
+- ✅ Removed @Component from StdioTransport (was causing client-side instantiation errors)
+
+**Manual Testing Infrastructure:**
+- ✅ test-requests/ directory created with JSON test files
+- ✅ tools-list.json (tools/list request)
+- ✅ tools-call-add.json (add tool invocation)
+- ✅ tools-call-multiply.json (multiply tool invocation)
+- ✅ tools-call-invalid.json (error handling validation)
+- ✅ All manual tests PASSED (server fully operational)
+
+**Status:** Server layer 100% COMPLETE ✅ and TESTED ✅
+
 ---
 
 ## 🚧 In Progress
@@ -154,7 +185,7 @@ Master Model Context Protocol (MCP) through structured POCs while maintaining pr
 
 **Goal:** Understand MCP protocol basics
 
-**Status:** Domain layer complete ✅, JsonRpcCodec complete ✅, ServerStdioTransport complete ✅, ServerMessageHandler complete ✅, McpServerApplication next 🚧
+**Status:** Server layer COMPLETE ✅ and TESTED ✅, Client layer NEXT 🚧
 
 **What's Done:**
 - ✅ Project structure created (mcp/01-hello-world/)
@@ -176,15 +207,24 @@ Master Model Context Protocol (MCP) through structured POCs while maintaining pr
 - ✅ JSON-RPC error response mapping with proper error codes
 - ✅ Pattern matching for type-safe request handling
 - ✅ Javadoc directive added to CODING_STYLE.md (public methods only, not private)
+- ✅ McpServerApplication with Spring Boot integration (CommandLineRunner)
+- ✅ Tool registration system with @PostConstruct (CRITICAL FIX)
+- ✅ Server main loop with error handling and graceful shutdown
+- ✅ Java preview features runtime configuration (--enable-preview in pom.xml)
+- ✅ Manual testing infrastructure (test-requests/ directory)
+- ✅ All manual tests PASSED (tools/list, tools/call, error handling)
 
 **What's Next:**
 
-1. Application layer - McpServerApplication implementation (CURRENT)
-2. Application layer - McpClientDemo implementation
-3. Integration testing (deferred until after exploration)
-4. Documentation (POC README.md + LEARNINGS.md update)
+1. Application layer - McpClientDemo implementation (CURRENT FOCUS)
+   - Client-side stdio transport
+   - Request sending (tools/list, tools/call)
+   - Response parsing and handling
+   - End-to-end client-server communication
+2. Integration testing (deferred until after client implementation)
+3. Documentation (POC README.md + LEARNINGS.md update)
 
-**Current Focus:** McpServerApplication main entry point (server startup and lifecycle)
+**Current Focus:** Client development - implement MCP client to communicate with the completed server
 
 
 
@@ -193,8 +233,8 @@ Master Model Context Protocol (MCP) through structured POCs while maintaining pr
 **Deliverables (Updated):**
 - ✅ Domain layer with Java 21 features
 - ✅ Infrastructure layer (codec: ✅ COMPLETE | transport: ✅ COMPLETE)
-- 🚧 Application layer (ServerMessageHandler: ✅ | McpServerApplication: 🚧 IN PROGRESS | client: ⏳)
-- ⏳ Integration testing (deferred for exploration)
+- 🚧 Application layer (Server: ✅ COMPLETE & TESTED | Client: 🚧 IN PROGRESS)
+- ⏳ Integration testing (deferred until after client implementation)
 - ⏳ POC documentation
 - ⏳ Technical article draft
 
@@ -207,83 +247,67 @@ Master Model Context Protocol (MCP) through structured POCs while maintaining pr
 
 ## 📋 Next Steps (Prioritized)
 
-### Priority 1: MCP POC 1 - Infrastructure Layer - StdioTransport (Current)
+### Priority 1: MCP POC 1 - Client Implementation (Current)
 
-**Goal:** Implement stdio transport for MCP communication
+**Goal:** Implement MCP client to communicate with the completed server
 
-**Status:** Not started (JsonRpcCodec complete ✅)
+**Status:** Server complete ✅ and tested ✅, Client implementation next 🚧
 
 **Implementation Tasks:**
-1. StdioTransport (infrastructure/transport/) - 0% complete
-   - ⏳ Implement StdioTransport interface
-   - ⏳ Read JSON-RPC messages from stdin (newline-delimited)
-   - ⏳ Write JSON-RPC messages to stdout
-   - ⏳ Process management (spawn MCP server subprocess)
-   - ⏳ Error handling for I/O failures
+1. ClientStdioTransport (client.impl/)
+   - ⏳ Implement client-side stdio transport
+   - ⏳ Spawn MCP server subprocess (ProcessBuilder)
+   - ⏳ Write JSON-RPC requests to server's stdin
+   - ⏳ Read JSON-RPC responses from server's stdout
+   - ⏳ Process lifecycle management (start, stop, cleanup)
+   - ⏳ Error handling for I/O and process failures
    - ⏳ Integration with JsonRpcCodec
 
-**Deliverables:**
-- 🚧 Working stdio transport (read/write)
-- ⏳ Process spawning and lifecycle management
-- ⏳ Integration with JsonRpcCodec
+2. McpClientDemo (client/)
+   - ⏳ Send tools/list request and display available tools
+   - ⏳ Send tools/call requests (add, multiply, random)
+   - ⏳ Parse and display responses
+   - ⏳ Handle error responses
+   - ⏳ Demonstrate end-to-end client-server communication
 
-**Estimated Duration:** 2-3 hours
+**Deliverables:**
+- ⏳ Working client-side stdio transport with process management
+- ⏳ Working MCP client demo application
+- ⏳ End-to-end communication validated (client ↔ server)
+
+**Estimated Duration:** 3-4 hours
 
 ---
 
-### Priority 2: MCP POC 1 - Application Layer
-
-**Goal:** Implement MCP client and server
-
-**Implementation Tasks:**
-1. McpServer (application/server/)
-   - Handle tools/list requests
-   - Handle tools/call requests
-   - Invoke tools via ToolRegistry
-   - Return ContentBlock results
-   - Error handling (tool not found, invalid params)
-
-2. McpClient (application/client/)
-   - Send tools/list request
-   - Send tools/call request
-   - Parse responses
-   - Handle errors
-
-**Deliverables:**
-- Working MCP server
-- Working MCP client
-- End-to-end communication (client ↔ server)
-
-**Estimated Duration:** 2-3 hours
-
----
-
-### Priority 3: MCP POC 1 - Testing & Documentation
+### Priority 2: MCP POC 1 - Testing & Documentation
 
 **Goal:** Validate POC and document learnings
 
+**Status:** Pending client implementation ⏳
+
 **Tasks:**
 1. Integration testing
-   - Test client-server communication
-   - Test all calculator tools
-   - Test error scenarios
-   - (Unit tests optional for exploration phase)
+   - ⏳ Test end-to-end client-server communication
+   - ⏳ Test all calculator tools via client (add, multiply, random)
+   - ⏳ Test error scenarios (invalid tool, invalid parameters)
+   - ⏳ Validate JSON-RPC protocol compliance
+   - ⏳ (Unit tests optional for exploration phase)
 
 2. Documentation
-   - Create mcp/01-hello-world/README.md
-   - Update LEARNINGS.md with architectural decisions
-   - Draft technical article
+   - ⏳ Create mcp/01-hello-world/README.md (architecture, setup, lessons learned)
+   - ⏳ Update LEARNINGS.md with architectural decisions and key insights
+   - ⏳ Draft technical article (MCP protocol basics, Java implementation)
 
 **Deliverables:**
-- POC README with setup instructions
-- Updated LEARNINGS.md
-- Technical article draft (1st version)
+- ⏳ POC README with architecture diagram and setup instructions
+- ⏳ Updated LEARNINGS.md with session summary
+- ⏳ Technical article draft (1st version)
 
-**Estimated Duration:** 1-2 hours
+**Estimated Duration:** 2-3 hours (after client completion)
 
 ---
 
-### Priority 4: MCP POC 2 - AWS Cost Explorer (Week 2)
+### Priority 3: MCP POC 2 - AWS Cost Explorer (Week 2)
 
 **Goal:** Integrate with existing Python MCP server
 
@@ -479,4 +503,4 @@ Master Model Context Protocol (MCP) through structured POCs while maintaining pr
 - Weekly progress review (recommended)
 
 **Owned By:** Lucas Xavier Ferreira
-**Last Review:** 2025-12-08
+**Last Review:** 2025-12-20

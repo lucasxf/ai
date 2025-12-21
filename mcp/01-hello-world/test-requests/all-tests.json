@@ -1,0 +1,4 @@
+{"jsonrpc":"2.0","id":"1","method":"tools/list"}
+{"jsonrpc":"2.0","id":"2","method":"tools/call","params":{"name":"add","arguments":{"a":5,"b":3}}}
+{"jsonrpc":"2.0","id":"3","method":"tools/call","params":{"name":"multiply","arguments":{"a":7,"b":6}}}
+{"jsonrpc":"2.0","id":"4","method":"unknown-method"}

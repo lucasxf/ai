@@ -11,27 +11,26 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Implementação de transporte baseada em stdio (stdin/stdout) para comunicação MCP.
+ * Client-side stdio transport for MCP communication.
  * <p>
- * Esta implementação spawna um processo filho (servidor MCP) e comunica-se através
- * das streams padrão do processo:
+ * This implementation spawns an external MCP server process and communicates via stdio:
  * <ul>
- *     <li><strong>stdin</strong> - Envia mensagens JSON-RPC ao servidor (write + flush)</li>
- *     <li><strong>stdout</strong> - Recebe respostas JSON-RPC do servidor (read line-by-line)</li>
- *     <li><strong>stderr</strong> - Captura logs de erro do servidor (Virtual Thread assíncrono)</li>
+ *     <li><strong>stdin</strong> - Sends JSON-RPC messages to server (write + flush)</li>
+ *     <li><strong>stdout</strong> - Receives JSON-RPC responses from server (line-by-line)</li>
+ *     <li><strong>stderr</strong> - Captures server error logs (async Virtual Thread)</li>
  * </ul>
  * <p>
- * <strong>Características de implementação:</strong>
+ * <strong>Implementation Features:</strong>
  * <ul>
- *     <li>Encoding UTF-8 explícito em todas as streams</li>
- *     <li>Buffered I/O para eficiência (BufferedWriter/BufferedReader)</li>
- *     <li>Flush automático após cada mensagem (garante envio imediato)</li>
- *     <li>Leitura assíncrona de stderr via Virtual Thread (previne deadlock de buffer)</li>
- *     <li>Shutdown gracioso com timeout (destroy → wait → destroyForcibly)</li>
- *     <li>Thread-safe: método send() sincronizado para prevenir interleaving</li>
+ *     <li>Explicit UTF-8 encoding on all streams</li>
+ *     <li>Buffered I/O for efficiency (BufferedWriter/BufferedReader)</li>
+ *     <li>Auto-flush after each message (ensures immediate sending)</li>
+ *     <li>Async stderr reading via Virtual Thread (prevents buffer deadlock)</li>
+ *     <li>Graceful shutdown with timeout (destroy → wait → destroyForcibly)</li>
+ *     <li>Thread-safe: send() method synchronized to prevent interleaving</li>
  * </ul>
  * <p>
- * <strong>Exemplo de uso:</strong>
+ * <strong>Usage Example:</strong>
  * <pre>{@code
  * List<String> command = List.of("java", "-jar", "mcp-server.jar");
  * try (StdioTransport transport = new StdioTransport(command)) {
@@ -41,20 +40,24 @@ import java.util.concurrent.TimeUnit;
  * }
  * }</pre>
  * <p>
- * <strong>Tratamento de erros:</strong>
+ * <strong>Error Handling:</strong>
  * <ul>
- *     <li>Se o processo filho morrer (EOF em stdout), {@link #receive()} lança {@link TransportException}</li>
- *     <li>Se o buffer de stderr encher, a Virtual Thread continua lendo (previne deadlock)</li>
- *     <li>Erros de I/O durante send/receive são wrapeados em {@link TransportException}</li>
+ *     <li>If child process dies (EOF on stdout), {@link #receive()} throws {@link TransportException}</li>
+ *     <li>If stderr buffer fills, Virtual Thread continues reading (prevents deadlock)</li>
+ *     <li>I/O errors during send/receive are wrapped in {@link TransportException}</li>
  * </ul>
+ * <p>
+ * <strong>NOTE:</strong> This class is NOT a Spring component. It must be manually instantiated
+ * by MCP clients with the appropriate server command. Use {@link ai.mcp.helloworld.server.impl.ServerStdioTransport}
+ * for server-side stdio transport (reads from System.in, writes to System.out).
  *
  * @author Lucas Xavier Ferreira
  * @date 04/11/2025 20:55
  * @see Transport
  * @see ProcessBuilder
+ * @see ai.mcp.helloworld.server.impl.ServerStdioTransport
  */
 @Slf4j
-@Component
 public class StdioTransport implements Transport {
 
     private static final int SHUTDOWN_TIMEOUT_SECONDS = 5;
