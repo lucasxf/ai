@@ -4,21 +4,22 @@
 # Analysis period: Project inception to 2025-11-25
 
 [metadata]
-timestamp = "2025-12-13T06:51:00-03:00"
-commit_sha = "b98492e636483cfb8718c297f15345ebc259848b"
+timestamp = "2025-12-21T07:45:00-03:00"
+commit_sha = "5b01285454fe6a46d855b0642116bec5babc405a"
 branch = "feature/poc-01-hello-world"
 schema_version = "1.0.0"
 updated_by = "pulse"
 baseline_mode = false
 update_mode = "delta"
-total_commits_analyzed = 23
-commits_with_automations = 10
-analysis_period = "ce9da8d..HEAD"
+total_commits_analyzed = 35
+commits_with_automations = 18
+analysis_period = "b98492e..HEAD"
+delta_period_days = 8
 
 [agent_usage.tech-writer]
-invocations = 5
-last_used = "2025-12-06T11:08:06-03:00"
-# Inferred from: Jackson @JsonProperty directive + CODING_STYLE.md docs (ccd0125), auto-trigger protocol documentation (fe22854)
+invocations = 9
+last_used = "2025-12-21T07:37:11-03:00"
+# Inferred from: LEARNINGS.md + ROADMAP updates (5b01285), logging guidance (685c36b), directive reload (c7b0f0a), Javadoc rules (303f0f4), ROADMAP update (4a7bb11)
 
 [agent_usage.automation-sentinel]
 invocations = 1
@@ -26,9 +27,9 @@ last_used = "2025-11-25T19:19:01-03:00"
 # Inferred from: "automation infrastructure finalization"
 
 [agent_usage.backend-code-reviewer]
-invocations = 6
-last_used = "2025-12-13T06:50:27-03:00"
-# Inferred from: JsonRpcCodec implementation with Option B architecture (ce9da8d), Virtual Thread transport layer with exception handling architecture decisions (b98492e)
+invocations = 8
+last_used = "2025-12-21T07:37:11-03:00"
+# Inferred from: Spring Boot integration + error handling (5b01285), package restructuring (51eff0b), architecture segregation (a3ceb83), MCP server work (c99ac2d)
 
 [agent_usage.session-optimizer]
 invocations = 1
@@ -36,9 +37,9 @@ last_used = "2025-11-25T19:19:01-03:00"
 # Inferred from: "claude init setup", multiple sessions
 
 [agent_usage.pulse]
-invocations = 4
-last_used = "2025-12-13T06:51:00-03:00"
-# Inferred from: explicit pulse invocation mentions in commits (4cfe304 + current delta run)
+invocations = 5
+last_used = "2025-12-21T07:45:00-03:00"
+# Inferred from: current delta mode run (explicit invocation)
 
 [agent_usage.flutter-implementation-coach]
 invocations = 0
@@ -53,8 +54,9 @@ invocations = 0
 last_used = null
 
 [agent_usage.cross-project-architect]
-invocations = 0
-last_used = null
+invocations = 1
+last_used = "2025-12-15T20:14:52-03:00"
+# Inferred from: MCP hybrid architecture response (a3ceb83)
 
 [command_usage.start-session]
 invocations = 4
@@ -67,9 +69,9 @@ last_used = "2025-11-25T19:19:01-03:00"
 # Inferred from: "complete documentation review"
 
 [command_usage.create-pr]
-invocations = 4
-last_used = "2025-11-30T08:55:00-03:00"
-# Direct count: 4 merged PRs in git log (includes #7, #6, #4)
+invocations = 5
+last_used = "2025-12-13T11:36:09-03:00"
+# Inferred from: /create-pr MCP auto-detection feature commit (1635299)
 
 [command_usage.update-roadmap]
 invocations = 0
@@ -118,37 +120,39 @@ invocations = 0
 last_used = null
 
 [productivity]
-# Current codebase snapshot (as of HEAD b98492e)
+# Current codebase snapshot (as of HEAD 5b01285)
 # Note: Java code is in MCP POCs, not typical service structure
-current_total_locs = 1398
-current_production_locs = 1264
+current_total_locs = 2013
+current_production_locs = 1879
 current_test_locs = 134
-test_ratio_percent = 10.6
+test_ratio_percent = 7.1
 
 # Period metrics (consolidated: full project history)
 total_locs_added = 28692
 total_locs_deleted = 2498
 net_locs = 26194
 
-# Delta since last checkpoint (2025-12-08 20:57)
-delta_locs_added = 417
-delta_locs_deleted = 44
-delta_net = 373
-delta_period_days = 5
+# Delta since last checkpoint (2025-12-13 06:51, commit b98492e)
+delta_locs_added = 2255
+delta_locs_deleted = 191
+delta_net = 2064
+delta_period_days = 8
 
-# Averages (based on commits with changes in full history)
-avg_locs_changed_per_commit = 2508
-avg_locs_added_per_commit = 2358
-avg_locs_deleted_per_commit = 205
+# Averages (based on commits with changes in delta period)
+# 12 commits with LOC changes in this period
+avg_locs_changed_per_commit = 204
+avg_locs_added_per_commit = 188
+avg_locs_deleted_per_commit = 16
 
 # Velocity metrics (informational, calculated by automation-sentinel)
-locs_per_day = 155
-locs_per_session = 437
-delta_locs_per_day = 83
+delta_locs_per_day = 282
+delta_commits = 12
 
 [health]
 schema_errors = 0
-total_agents = 6
+total_agents = 9
 total_commands = 16
+active_agents = 5
 baseline_established = true
 next_update_mode = "delta"
+metrics_integrity = "ok"
