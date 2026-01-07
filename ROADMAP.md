@@ -1,6 +1,6 @@
 # AI/MCP Studies Roadmap
 
-**Last Updated:** 2025-12-20
+**Last Updated:** 2026-01-07
 **Current Branch:** feature/poc-01-hello-world
 **Project Status:** MCP POC 1 - Server layer COMPLETE ✅, Client layer next 🚧
 
@@ -35,6 +35,14 @@ Master Model Context Protocol (MCP) through structured POCs while maintaining pr
 - ✅ ROADMAP.md - Project tracking (created from scratch)
 - ✅ All cross-references validated for consistency
 - ✅ Missing commands documented (/resume-session, /create-pr, /save-response)
+
+**Documentation Enhancement (Session: 2026-01-07)**
+- ✅ CODING_STYLE.md - Added 5 important design principles and best practices:
+  - DRY (Don't Repeat Yourself) with abstraction guidance
+  - ETC (Easier to Change) with concrete examples
+  - SHY (Shy Code / Law of Demeter) with real-world scenarios
+  - Orthogonality with impact analysis examples
+  - Rich Domain Models (Tell, Don't Ask) with comprehensive refactoring examples
 
 **Completed Initial Setup (Session: 2025-11-25)**
 - ✅ Comprehensive documentation review and validation
@@ -503,4 +511,4 @@ Master Model Context Protocol (MCP) through structured POCs while maintaining pr
 - Weekly progress review (recommended)
 
 **Owned By:** Lucas Xavier Ferreira
-**Last Review:** 2025-12-20
+**Last Review:** 2026-01-07

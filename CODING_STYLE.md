@@ -19,6 +19,10 @@
 - **Comentários e logs podem ser em português** - Documentação e mensagens de log
 - **Separation of Concerns** - Clara divisão entre camadas
 - **Test-After-Implementation** - Sempre criar testes imediatamente após implementar classe testável
+- **DRY (Don't Repeat Yourself)** - Evitar duplicação de conhecimento e intenção; cada peça de conhecimento/lógica deve ter uma única representação autoritativa no sistema (Added 2026-01-07)
+- **ETC (Easier to Change)** - Priorizar design e decisões que facilitam mudanças futuras; código deve ser flexível e adaptável ao invés de otimizado prematuramente (Added 2026-01-07)
+- **SHY (Shy Code)** - Minimizar acoplamento entre módulos; cada módulo deve expor apenas o necessário e não revelar detalhes internos de implementação (Added 2026-01-07)
+- **Orthogonality** - Componentes devem ser independentes e auto-contidos; mudanças em um módulo não devem exigir mudanças em outros módulos não relacionados (Added 2026-01-07)
 
 ## 📋 Nomenclatura Universal
 
@@ -216,6 +220,82 @@ public class CreateAccountHandler implements CommandHandler<CreateAccount> {
 
 }
 ```
+
+### 3. Rich Domain Models (Tell, Don't Ask)
+
+**REGRA:** Preferir rich domain models com comportamento encapsulado ao invés de anemic models com getters/setters.
+
+**Princípio "Tell, Don't Ask":**
+- Diga ao objeto o que fazer (comando) ao invés de perguntar seu estado e decidir externamente
+- Comportamento deve estar **dentro** do domínio, não em serviços que manipulam dados
+- Evitar expor estado interno através de getters desnecessários
+
+**Exemplo INCORRETO (Anemic Model):**
+```java
+// ❌ Modelo anêmico - apenas dados, sem comportamento
+public class Order {
+    private OrderStatus status;
+    private BigDecimal totalAmount;
+
+    public OrderStatus getStatus() { return status; }
+    public void setStatus(OrderStatus status) { this.status = status; }
+    public BigDecimal getTotalAmount() { return totalAmount; }
+    public void setTotalAmount(BigDecimal amount) { this.totalAmount = amount; }
+}
+
+// ❌ Lógica de negócio no serviço (Tell, Don't Ask violation)
+public class OrderService {
+    public void cancelOrder(Order order) {
+        if (order.getStatus() == OrderStatus.PENDING) {  // ← Perguntando
+            order.setStatus(OrderStatus.CANCELLED);       // ← Manipulando
+            order.setTotalAmount(BigDecimal.ZERO);        // ← Manipulando
+        }
+    }
+}
+```
+
+**Exemplo CORRETO (Rich Domain):**
+```java
+// ✅ Rich domain model - comportamento encapsulado
+public class Order {
+    private OrderStatus status;
+    private BigDecimal totalAmount;
+
+    public void cancel() {  // ← Tell (comando), não Ask
+        if (status != OrderStatus.PENDING) {
+            throw new InvalidOrderStateException("Só é possível cancelar pedidos pendentes");
+        }
+        this.status = OrderStatus.CANCELLED;
+        this.totalAmount = BigDecimal.ZERO;
+        // Validações e regras de negócio ficam aqui
+    }
+
+    public boolean isPending() {  // ← Query methods são OK para leitura
+        return status == OrderStatus.PENDING;
+    }
+
+    // Getters apenas para leitura, sem setters que expõem mutabilidade
+    public OrderStatus getStatus() { return status; }
+    public BigDecimal getTotalAmount() { return totalAmount; }
+}
+
+// ✅ Serviço apenas coordena, não contém lógica de domínio
+public class OrderService {
+    public void cancelOrder(UUID orderId) {
+        var order = repository.findById(orderId);
+        order.cancel();  // ← Tell: diz o que fazer, não manipula estado
+        repository.save(order);
+    }
+}
+```
+
+**Benefícios:**
+- Lógica de negócio centralizada no domínio (single source of truth)
+- Invariantes protegidas (validações dentro do modelo)
+- Testes mais simples (testar domínio sem dependências externas)
+- Menor acoplamento entre serviços e modelos
+
+(Added 2026-01-07)
 
 ## 📝 Convenções de Código (Backend)
 
