@@ -3,6 +3,7 @@ package ai.mcp.helloworld.server.impl;
 import ai.mcp.helloworld.server.McpServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,6 +11,11 @@ import org.springframework.stereotype.Component;
  * <p>
  * This runner is executed after the Spring context is fully initialized, ensuring
  * all dependencies (Transport, Codec, ServerMessageHandler) are properly wired.
+ * <p>
+ * <strong>Conditional Activation:</strong>
+ * This runner is DISABLED when {@code mcp.client.demo.enabled=true} to prevent
+ * conflicts with {@link ai.mcp.helloworld.client.impl.McpClientRunner}.
+ * By default (server mode), this runner is ENABLED.
  * <p>
  * <strong>Execution Flow:</strong>
  * <ol>
@@ -37,6 +43,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
+@ConditionalOnProperty(name = "mcp.client.demo.enabled", havingValue = "false", matchIfMissing = true)
 public class McpServerRunner implements CommandLineRunner {
 
     private final McpServer mcpServer;

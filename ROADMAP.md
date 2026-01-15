@@ -1,8 +1,8 @@
 # AI/MCP Studies Roadmap
 
-**Last Updated:** 2026-01-07
+**Last Updated:** 2026-01-15
 **Current Branch:** feature/poc-01-hello-world
-**Project Status:** MCP POC 1 - Server layer COMPLETE ✅, Client layer next 🚧
+**Project Status:** MCP POC 1 - Client & Server COMPLETE ✅ (pending tests ⚠️)
 
 ---
 
@@ -222,34 +222,50 @@ Master Model Context Protocol (MCP) through structured POCs while maintaining pr
 - ✅ Manual testing infrastructure (test-requests/ directory)
 - ✅ All manual tests PASSED (tools/list, tools/call, error handling)
 
+### Client Layer Implementation Complete (2026-01-15)
+
+- ✅ **McpClientImpl** - Simplified request-response pattern, thread-safe ID generation (AtomicLong)
+- ✅ **McpClientException** - Concrete client exception class (HTTP 400)
+- ✅ **McpClientRunner** - Spring Boot CommandLineRunner for client demo (@ConditionalOnProperty)
+- ✅ **Infrastructure improvements** - stderr logging (logback-spring.xml), conditional runners
+- ✅ **Domain model fixes** - ToolListResponse uses ToolDefinition, ContentBlock polymorphic deserialization
+- ✅ **End-to-end testing** - Client ↔ Server communication VERIFIED (all 3 tools working: add=8, multiply=28, random=number)
+
+**Code Review Results (2026-01-15):**
+- ✅ 95% convention adherence, 98% documentation completeness
+- ✅ 100% constructor injection, method ordering, Java 21 usage
+- ❌ 0% test coverage (CRITICAL BLOCKER - empty test skeleton)
+- ❌ Hardcoded configuration values (violation of @ConfigurationProperties standard)
+
+**Status:** POC 1 functionally complete ✅ but NOT production-ready ⚠️ (zero tests)
+
 **What's Next:**
 
-1. Application layer - McpClientDemo implementation (CURRENT FOCUS)
-   - Client-side stdio transport
-   - Request sending (tools/list, tools/call)
-   - Response parsing and handling
-   - End-to-end client-server communication
-2. Integration testing (deferred until after client implementation)
-3. Documentation (POC README.md + LEARNINGS.md update)
+1. **CRITICAL:** Test coverage (0% → >80% target)
+   - McpClientImpl unit tests (request-response, error handling)
+   - McpClientRunner integration tests
+   - End-to-end client-server test automation
+2. **HIGH:** Configuration refactoring
+   - Create McpClientProperties with @ConfigurationProperties
+   - Replace hardcoded JAR path with injected property
+   - Fix platform-specific path handling
+3. Documentation (POC README.md + LEARNINGS.md update + article draft)
 
-**Current Focus:** Client development - implement MCP client to communicate with the completed server
-
-
-
+**Current Focus:** Test coverage - implement comprehensive test suite to reach production-ready status
 
 
 **Deliverables (Updated):**
 - ✅ Domain layer with Java 21 features
 - ✅ Infrastructure layer (codec: ✅ COMPLETE | transport: ✅ COMPLETE)
-- 🚧 Application layer (Server: ✅ COMPLETE & TESTED | Client: 🚧 IN PROGRESS)
-- ⏳ Integration testing (deferred until after client implementation)
+- ✅ Application layer (Server: ✅ COMPLETE & TESTED | Client: ✅ FUNCTIONALLY COMPLETE)
+- ⚠️ Test coverage (CRITICAL BLOCKER - 0% coverage on client layer)
 - ⏳ POC documentation
 - ⏳ Technical article draft
 
 **Note on Testing Strategy:**
-- Unit/integration tests deferred for exploration phase
-- Focus on understanding MCP protocol through working implementation
-- Tests to be added after POC demonstrates end-to-end functionality
+- POC successfully demonstrated end-to-end functionality ✅
+- Test coverage now REQUIRED before proceeding to next phase
+- Target: >80% coverage on all client and shared components
 
 ---
 

@@ -5,6 +5,7 @@ import ai.mcp.helloworld.domain.protocol.*;
 import ai.mcp.helloworld.domain.protocol.ToolInvocationRequest.ToolCallParams;
 import ai.mcp.helloworld.domain.tool.ContentBlock;
 import ai.mcp.helloworld.domain.tool.Tool;
+import ai.mcp.helloworld.domain.tool.ToolDefinition;
 import ai.mcp.helloworld.domain.tool.ToolRegistry;
 import ai.mcp.helloworld.exception.McpServerException;
 import ai.mcp.helloworld.exception.ToolNotFoundException;
@@ -165,11 +166,14 @@ public class ServerMessageHandler {
      */
     private ToolListResponse handleToolListRequest(McpRequest request) {
         final List<Tool> tools = ToolRegistry.getAllTools();
+        final List<ToolDefinition> toolDefinitions = tools.stream()
+                .map(Tool::getDefinition)
+                .toList();
         return new ToolListResponse(
                 request.id().toString(),
                 JSONRPC_VERSION,
                 "Tool list retrieved successfully",
-                new ToolListResponse.ToolListResult(tools));
+                new ToolListResponse.ToolListResult(toolDefinitions));
     }
 
     /**

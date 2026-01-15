@@ -6,6 +6,132 @@
 
 ---
 
+## Session: 2026-01-15 - MCP Client Layer - Implementation & End-to-End Validation
+
+**Stack:** Backend (Java 21, Spring Boot 3, MCP Protocol)
+**Duration:** ~6 hours
+**Branch:** `feature/poc-01-hello-world`
+**Status:** Client functionally complete ✅, end-to-end tested ✅, but 0% test coverage ⚠️
+
+---
+
+### Backend ☕
+
+#### What Was Done
+
+**1. McpClientImpl - Simplified Request-Response Pattern**
+- Implemented simplified client architecture (inline response parsing vs handler delegation)
+- Thread-safe request ID generation using AtomicLong
+- Pattern matching for polymorphic response handling (ToolListResponse vs McpErrorResponse)
+- File: `mcp/01-hello-world/src/main/java/ai/mcp/helloworld/client/impl/McpClientImpl.java:239`
+
+**2. McpClientRunner - Spring Boot CommandLineRunner**
+- Created demo runner with @ConditionalOnProperty (mutually exclusive with server runner)
+- Subprocess spawning for server JAR execution
+- Platform-specific JAR path resolution (Windows handling)
+- File: `mcp/01-hello-world/src/main/java/ai/mcp/helloworld/client/impl/McpClientRunner.java:149`
+
+**3. Domain Model Serialization Fixes**
+- **ToolListResponse**: Changed from `List<Tool>` (interface) to `List<ToolDefinition>` (concrete record)
+  - Root cause: Jackson serialized as `{"definition": {...}}` but couldn't deserialize back
+  - Fix: ServerMessageHandler now maps `Tool::getDefinition` explicitly
+- **ContentBlock**: Added Jackson polymorphic deserialization annotations
+  - `@JsonTypeInfo(use = JsonTypeInfo.Id.DEDUCTION)` - Type detection by JSON structure
+  - `@JsonSubTypes` for TextContent, ImageContent, ResourceContent
+
+**4. Infrastructure Improvements**
+- **Logging configuration**: Created logback-spring.xml with stderr target (prevents stdout pollution)
+- **Conditional runners**: Made McpServerRunner and McpClientRunner mutually exclusive via @ConditionalOnProperty
+- **Java preview features**: Added `--enable-preview` flag to server spawn command in McpClientRunner
+
+**5. End-to-End Testing (Manual)**
+- ✅ Client spawns server subprocess successfully
+- ✅ tools/list request-response working
+- ✅ tools/call for all 3 tools (add=8, multiply=28, random=valid number)
+- ✅ Error handling verified (invalid requests, unknown tools)
+
+#### Key Decisions & Rationale
+
+**Decision 1: Simplified Client Pattern (No Handler Delegation)**
+- **Context**: Should client mirror server's handler delegation pattern?
+- **Decision**: Implement simplified inline parsing
+- **Rationale**:
+  - Client is fundamentally different from server (request-response vs continuous loop)
+  - No routing needed (client explicitly chooses method to call)
+  - Inline pattern matching sufficient for response type detection
+  - Reduces complexity without sacrificing maintainability
+
+**Decision 2: Thread-Safe Request ID Generation (AtomicLong)**
+- **Context**: How to generate unique request IDs in thread-safe manner?
+- **Decision**: Use AtomicLong with getAndIncrement()
+- **Rationale**:
+  - Lock-free atomic operations (better performance than synchronized)
+  - Simple monotonic counter pattern
+  - Thread-safe without explicit synchronization
+
+**Decision 3: Concrete Exception Classes (McpClientException)**
+- **Context**: Original code used abstract McpException directly
+- **Decision**: Create concrete McpClientException subclass
+- **Rationale**:
+  - Abstract classes cannot be instantiated
+  - Allows future specialization (client-specific vs server-specific errors)
+  - Follows exception hierarchy pattern from wine-reviewer
+
+#### Lessons Learned
+
+**1. Jackson Polymorphic Deserialization Gotchas**
+- **Problem**: Sealed interfaces with nested records require explicit type information
+- **Solution**: Use `@JsonTypeInfo(use = Id.DEDUCTION)` for automatic type detection based on JSON structure
+- **Key Learning**: Deduction strategy avoids explicit type fields in JSON (cleaner protocol)
+
+**2. Stdout Pollution in Stdio Transport**
+- **Problem**: Spring Boot logs and banner written to stdout, breaking JSON-RPC message parsing
+- **Solution**: Configure all logging to stderr via logback-spring.xml
+- **Key Learning**: MCP stdio transport reserves stdout exclusively for JSON-RPC messages
+
+**3. Interface Serialization Issues**
+- **Problem**: `List<Tool>` (interface) serialized as `{"definition": {...}}` but couldn't deserialize
+- **Root Cause**: Jackson doesn't know which concrete class to instantiate for interface
+- **Solution**: Use concrete types (ToolDefinition) in response DTOs
+- **Key Learning**: DTOs should use concrete types, not interfaces (even if domain uses interfaces)
+
+**4. Conditional Bean Activation**
+- **Problem**: Both McpServerRunner and McpClientRunner attempted to run simultaneously
+- **Solution**: Use @ConditionalOnProperty with mutually exclusive conditions
+- **Key Learning**: Spring Boot runners need explicit activation conditions when multiple exist
+
+#### Critical Gaps Identified
+
+**Code Review Results (2026-01-15):**
+- ✅ 95% convention adherence (constructor injection, method ordering, Java 21 features)
+- ✅ 98% documentation completeness (comprehensive Javadoc with architecture notes)
+- ❌ **0% test coverage** (CRITICAL BLOCKER - empty test skeleton exists but no actual tests)
+- ❌ **Hardcoded configuration** (JAR path, server command) - violates @ConfigurationProperties standard
+
+**Impact**: POC 1 is functionally complete and demonstrates end-to-end MCP communication, but NOT production-ready.
+
+**Next Steps (Priority Order)**:
+1. **CRITICAL**: Implement comprehensive test suite (target >80% coverage)
+   - McpClientImpl unit tests (request-response, error handling)
+   - McpClientRunner integration tests
+   - End-to-end client-server test automation
+2. **HIGH**: Configuration refactoring
+   - Create McpClientProperties with @ConfigurationProperties
+   - Replace hardcoded JAR path with injected property
+   - Fix platform-specific path handling (use Path.of() for cross-platform)
+3. Documentation (POC README.md + article draft)
+
+#### Technical Debt Created
+
+| Issue | Severity | Location | Resolution Plan |
+|-------|----------|----------|-----------------|
+| Zero test coverage | CRITICAL | McpClientImpl, McpClientRunner | Implement full test suite before next POC |
+| Hardcoded JAR path | HIGH | McpClientRunner.java:118-133 | Create McpClientProperties |
+| Platform-specific path handling | MEDIUM | McpClientRunner.java:125-128 | Use Path.of() for cross-platform |
+| Javadoc inconsistency | LOW | McpClientImpl.java:47 | Fix comment reference (McpException → McpClientException) |
+
+---
+
 ## Session: 2025-12-20 - MCP Server Layer - Spring Boot Integration & Manual Testing
 
 **Stack:** Backend (Java 21, Spring Boot 3, MCP Protocol)

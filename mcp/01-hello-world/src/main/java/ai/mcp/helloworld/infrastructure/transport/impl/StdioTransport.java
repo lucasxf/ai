@@ -3,7 +3,6 @@ package ai.mcp.helloworld.infrastructure.transport.impl;
 import ai.mcp.helloworld.exception.TransportException;
 import ai.mcp.helloworld.infrastructure.transport.Transport;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
