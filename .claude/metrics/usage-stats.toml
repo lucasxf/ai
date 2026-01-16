@@ -4,22 +4,22 @@
 # Analysis period: Project inception to 2025-11-25
 
 [metadata]
-timestamp = "2025-12-21T07:45:00-03:00"
-commit_sha = "5b01285454fe6a46d855b0642116bec5babc405a"
+timestamp = "2026-01-15T06:47:00-03:00"
+commit_sha = "97818aaef5db4577aa01174dcf22c4d8e354fec2"
 branch = "feature/poc-01-hello-world"
 schema_version = "1.0.0"
 updated_by = "pulse"
 baseline_mode = false
 update_mode = "delta"
-total_commits_analyzed = 35
-commits_with_automations = 18
-analysis_period = "b98492e..HEAD"
-delta_period_days = 8
+total_commits_analyzed = 37
+commits_with_automations = 20
+analysis_period = "98d3ad2..HEAD"
+delta_period_days = 2
 
 [agent_usage.tech-writer]
-invocations = 9
-last_used = "2025-12-21T07:37:11-03:00"
-# Inferred from: LEARNINGS.md + ROADMAP updates (5b01285), logging guidance (685c36b), directive reload (c7b0f0a), Javadoc rules (303f0f4), ROADMAP update (4a7bb11)
+invocations = 10
+last_used = "2026-01-15T06:46:00-03:00"
+# Inferred from: LEARNINGS.md + ROADMAP updates (97818aa), design principles doc (9f78999)
 
 [agent_usage.automation-sentinel]
 invocations = 1
@@ -27,9 +27,9 @@ last_used = "2025-11-25T19:19:01-03:00"
 # Inferred from: "automation infrastructure finalization"
 
 [agent_usage.backend-code-reviewer]
-invocations = 8
-last_used = "2025-12-21T07:37:11-03:00"
-# Inferred from: Spring Boot integration + error handling (5b01285), package restructuring (51eff0b), architecture segregation (a3ceb83), MCP server work (c99ac2d)
+invocations = 9
+last_used = "2026-01-15T06:46:00-03:00"
+# Inferred from: Client implementation review (97818aa), domain model fixes + e2e validation
 
 [agent_usage.session-optimizer]
 invocations = 1
@@ -37,9 +37,9 @@ last_used = "2025-11-25T19:19:01-03:00"
 # Inferred from: "claude init setup", multiple sessions
 
 [agent_usage.pulse]
-invocations = 5
-last_used = "2025-12-21T07:45:00-03:00"
-# Inferred from: current delta mode run (explicit invocation)
+invocations = 6
+last_used = "2026-01-15T06:47:00-03:00"
+# Inferred from: current delta mode run (explicit invocation, 2 new commits)
 
 [agent_usage.flutter-implementation-coach]
 invocations = 0
@@ -120,33 +120,33 @@ invocations = 0
 last_used = null
 
 [productivity]
-# Current codebase snapshot (as of HEAD 5b01285)
+# Current codebase snapshot (as of HEAD 97818aa)
 # Note: Java code is in MCP POCs, not typical service structure
-current_total_locs = 2013
-current_production_locs = 1879
-current_test_locs = 134
-test_ratio_percent = 7.1
+current_total_locs = 2834
+current_production_locs = 2651
+current_test_locs = 183
+test_ratio_percent = 6.9
 
 # Period metrics (consolidated: full project history)
-total_locs_added = 28692
-total_locs_deleted = 2498
-net_locs = 26194
+total_locs_added = 29663
+total_locs_deleted = 2525
+net_locs = 27138
 
-# Delta since last checkpoint (2025-12-13 06:51, commit b98492e)
-delta_locs_added = 2255
-delta_locs_deleted = 191
-delta_net = 2064
-delta_period_days = 8
+# Delta since last checkpoint (2025-12-21 07:45, commit 98d3ad2)
+delta_locs_added = 971
+delta_locs_deleted = 27
+delta_net = 944
+delta_period_days = 2
 
 # Averages (based on commits with changes in delta period)
-# 12 commits with LOC changes in this period
-avg_locs_changed_per_commit = 204
-avg_locs_added_per_commit = 188
-avg_locs_deleted_per_commit = 16
+# 2 commits with LOC changes in this period
+avg_locs_changed_per_commit = 499
+avg_locs_added_per_commit = 486
+avg_locs_deleted_per_commit = 14
 
 # Velocity metrics (informational, calculated by automation-sentinel)
-delta_locs_per_day = 282
-delta_commits = 12
+delta_locs_per_day = 472
+delta_commits = 2
 
 [health]
 schema_errors = 0
