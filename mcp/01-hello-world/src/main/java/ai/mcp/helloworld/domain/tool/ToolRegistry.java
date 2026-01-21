@@ -40,4 +40,15 @@ public class ToolRegistry {
         REGISTRY.put(name, tool);
     }
 
+    /**
+     * Clears all registered tools.
+     * <p>
+     * <strong>Note:</strong> This method exists primarily for test isolation.
+     * In production, tools are registered once at startup and persist for
+     * the application lifecycle.
+     */
+    public static void clear() {
+        REGISTRY.clear();
+    }
+
 }
