@@ -8,8 +8,13 @@ spring:
       chat:
         options:
           model: sonnet-5
+  main:
+    # Disable banner to prevent stdout pollution in stdio mode
+    banner-mode: "off"
+    # Disable web server by default (stdio mode)
+    web-application-type: none
 
-# Server Configuration
+# Server Configuration (only used when mcp.client.demo.enabled=true)
 server:
   port: 8080
 

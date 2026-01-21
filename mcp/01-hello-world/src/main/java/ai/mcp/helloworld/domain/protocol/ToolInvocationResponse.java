@@ -13,6 +13,6 @@ public record ToolInvocationResponse(
         String jsonrpc,
         ToolCallResult result) implements McpResponse {
 
-    record ToolCallResult(List<ContentBlock> content) { }
+    public record ToolCallResult(List<ContentBlock> content) { }
 
 }

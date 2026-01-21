@@ -2,14 +2,15 @@ package ai.mcp.helloworld.domain.tool;
 
 import ai.mcp.helloworld.exception.InvalidToolParametersException;
 import ai.mcp.helloworld.exception.ToolNotFoundException;
+import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author lucas
  * @date 04/11/2025 20:50
  */
+@Component
 public class ToolRegistry {
 
     private static final Map<String, Tool> REGISTRY = new HashMap<>();
@@ -20,6 +21,10 @@ public class ToolRegistry {
             throw new ToolNotFoundException("Tool not found: " + name);
         }
         return tool;
+    }
+
+    public static List<Tool> getAllTools() {
+        return new ArrayList<>(REGISTRY.values());
     }
 
     public static void register(String name, Tool tool) {
@@ -33,6 +38,17 @@ public class ToolRegistry {
             throw new InvalidToolParametersException("Tool already exists: " + name);
         }
         REGISTRY.put(name, tool);
+    }
+
+    /**
+     * Clears all registered tools.
+     * <p>
+     * <strong>Note:</strong> This method exists primarily for test isolation.
+     * In production, tools are registered once at startup and persist for
+     * the application lifecycle.
+     */
+    public static void clear() {
+        REGISTRY.clear();
     }
 
 }

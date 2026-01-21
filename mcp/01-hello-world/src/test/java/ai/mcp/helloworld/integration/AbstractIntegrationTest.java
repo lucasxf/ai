@@ -1,7 +1,7 @@
 package ai.mcp.helloworld.integration;
 
-import ai.mcp.helloworld.application.client.McpClient;
-import ai.mcp.helloworld.application.server.McpServer;
+import ai.mcp.helloworld.client.McpClient;
+import ai.mcp.helloworld.server.McpServer;
 import ai.mcp.helloworld.domain.tool.ToolRegistry;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

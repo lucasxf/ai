@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!--
+        Logback configuration for MCP Hello World application.
+
+        CRITICAL: All console logging MUST go to STDERR, not STDOUT.
+
+        Why? When running as an MCP server via stdio transport:
+        - STDOUT is reserved for JSON-RPC messages ONLY
+        - STDERR is for logs (client's Virtual Thread reads and logs them)
+        - If logs go to STDOUT, client will try to parse them as JSON → failure
+
+        This configuration ensures:
+        1. Console appender uses STDERR (target="System.err")
+        2. All application logs go to console
+        3. Async Virtual Thread in StdioTransport reads stderr without blocking
+    -->
+
+    <!-- Console appender - MUST use System.err (not System.out) -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- CRITICAL: Use System.err to prevent stdout pollution -->
+        <target>System.err</target>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %5p --- [%15.15t] %-40.40logger{39} : %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Root logger configuration -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+    <!-- Application-specific logging levels -->
+    <logger name="ai.mcp.helloworld" level="INFO"/>
+    <logger name="ai.mcp.helloworld.infrastructure.transport" level="INFO"/>
+    <logger name="ai.mcp.helloworld.infrastructure.codec" level="DEBUG"/>
+
+    <!-- Reduce noise from Spring Framework -->
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.springframework.boot" level="INFO"/>
+
+</configuration>
